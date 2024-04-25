@@ -1,4 +1,4 @@
-package com.tareq.scanner
+package com.tareq.feature.scanner
 
 import org.junit.Test
 

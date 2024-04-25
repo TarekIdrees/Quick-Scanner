@@ -1,4 +1,4 @@
-package com.tareq.data
+package com.tareq.core.data
 
 import org.junit.Test
 

@@ -1,4 +1,4 @@
-package com.tareq.barcodescanner.ui.theme
+package com.tareq.design_system.theme
 
 import android.app.Activity
 import android.os.Build

@@ -10,7 +10,7 @@ foundation = "1.6.6"
 composeBom = "2024.04.01"
 lifecycleKtx = "2.7.0"
 lifecycleExtensions = "2.2.0"
-coroutines = "1.3.9"
+coroutines = "1.8.0"
 navigation = "2.7.7"
 ksp = "1.9.22-1.0.18"
 dagger-hilt = "2.51"
@@ -19,6 +19,8 @@ splash = "1.0.1"
 firebase-bom = "32.8.1"
 firebaseCrashlyticsPlugin = "2.9.9"
 codeScanner = "16.1.0"
+appcompat = "1.6.1"
+
 
 
 [libraries]
@@ -28,6 +30,7 @@ androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "j
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }
 androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }
+androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 androidx-ui = { group = "androidx.compose.ui", name = "ui" }
 androidx-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
 androidx-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
@@ -58,6 +61,8 @@ firebase-crashlytics = { group = "com.google.firebase", name = "firebase-crashly
 
 code-scanner = { group = "com.google.android.gms", name = "play-services-code-scanner", version.ref = "codeScanner" }
 
+
+
 [bundles]
 hilt = ["dagger-hilt", "hilt-navigation"]
 lifecycle = [
@@ -74,4 +79,5 @@ jetbrainsKotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "k
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "dagger-hilt" }
 firebaseCrashlytics = { id = "com.google.firebase.crashlytics", version.ref = "firebaseCrashlyticsPlugin" }
+androidLibrary = { id = "com.android.library", version.ref = "agp" }
 

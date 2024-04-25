@@ -1,6 +1,7 @@
 [versions]
 agp = "8.3.2"
-kotlin = "1.9.0"
+kotlin = "1.9.23"
+kotlinCompilerExtensionVersion = "1.5.12"
 coreKtx = "1.13.0"
 junit = "4.13.2"
 junitVersion = "1.1.5"
@@ -12,10 +13,11 @@ lifecycleKtx = "2.7.0"
 lifecycleExtensions = "2.2.0"
 coroutines = "1.8.0"
 navigation = "2.7.7"
-ksp = "1.9.22-1.0.18"
+ksp = "1.9.23-1.0.20"
 dagger-hilt = "2.51"
 hilt-navigation = "1.2.0"
 splash = "1.0.1"
+googleServicesPlugin = "4.4.1"
 firebase-bom = "32.8.1"
 firebaseCrashlyticsPlugin = "2.9.9"
 codeScanner = "16.1.0"
@@ -59,7 +61,7 @@ firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.r
 firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics" }
 firebase-crashlytics = { group = "com.google.firebase", name = "firebase-crashlytics" }
 
-code-scanner = { group = "com.google.android.gms", name = "play-services-code-scanner", version.ref = "codeScanner" }
+barcode-scanner = { group = "com.google.android.gms", name = "play-services-code-scanner", version.ref = "codeScanner" }
 
 
 
@@ -78,6 +80,7 @@ androidApplication = { id = "com.android.application", version.ref = "agp" }
 jetbrainsKotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "dagger-hilt" }
+googleServices = { id = "com.google.gms.google-services", version.ref = "googleServicesPlugin" }
 firebaseCrashlytics = { id = "com.google.firebase.crashlytics", version.ref = "firebaseCrashlyticsPlugin" }
 androidLibrary = { id = "com.android.library", version.ref = "agp" }
 

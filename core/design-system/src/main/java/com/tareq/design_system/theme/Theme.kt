@@ -1,4 +1,4 @@
-package com.tareq.core.design.system.theme
+package com.tareq.design_system.theme
 
 import android.app.Activity
 import androidx.compose.foundation.isSystemInDarkTheme

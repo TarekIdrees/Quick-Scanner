@@ -1,4 +1,4 @@
-package com.tareq.core.design.system.theme
+package com.tareq.design_system.theme
 
 import androidx.compose.ui.graphics.Color
 

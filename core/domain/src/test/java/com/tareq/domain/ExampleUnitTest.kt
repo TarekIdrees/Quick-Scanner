@@ -1,4 +1,4 @@
-package com.tareq.core.domain
+package com.tareq.domain
 
 import org.junit.Test
 

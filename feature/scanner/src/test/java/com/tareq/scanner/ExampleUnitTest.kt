@@ -1,4 +1,4 @@
-package com.tareq.feature.scanner
+package com.tareq.scanner
 
 import org.junit.Assert.assertEquals
 import org.junit.Test

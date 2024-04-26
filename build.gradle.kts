@@ -9,6 +9,7 @@ plugins {
     alias(libs.plugins.jetbrainsKotlinAndroid) apply false
     alias(libs.plugins.ksp) apply false
     alias(libs.plugins.hilt) apply false
+    alias(libs.plugins.spotless) apply false
     alias(libs.plugins.firebaseCrashlytics) apply false
     alias(libs.plugins.androidLibrary) apply false
 }
@@ -65,7 +66,10 @@ fun PluginContainer.applyDefaultConfig(project: Project) {
         }
     }
 }
-
 subprojects {
     project.plugins.applyDefaultConfig(project)
+
+    afterEvaluate {
+        project.apply("${project.rootDir}/spotless.gradle")
+    }
 }

@@ -22,6 +22,7 @@ firebase-bom = "32.8.1"
 firebaseCrashlyticsPlugin = "2.9.9"
 codeScanner = "16.1.0"
 appcompat = "1.6.1"
+spotless = "6.25.0"
 
 
 
@@ -82,5 +83,6 @@ ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "dagger-hilt" }
 googleServices = { id = "com.google.gms.google-services", version.ref = "googleServicesPlugin" }
 firebaseCrashlytics = { id = "com.google.firebase.crashlytics", version.ref = "firebaseCrashlyticsPlugin" }
+spotless = { id = "com.diffplug.gradle.spotless", version.ref = "spotless" }
 androidLibrary = { id = "com.android.library", version.ref = "agp" }
 

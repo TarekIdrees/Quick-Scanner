@@ -23,6 +23,13 @@ firebaseCrashlyticsPlugin = "2.9.9"
 codeScanner = "16.1.0"
 appcompat = "1.6.1"
 spotless = "6.25.0"
+coil = "2.6.0"
+okhttp-bom = "4.12.0"
+retrofit = "2.9.0"
+serilization-plugin = "1.9.22"
+serilization = "1.6.3"
+lottie = "4.2.0"
+
 
 
 
@@ -64,6 +71,18 @@ firebase-crashlytics = { group = "com.google.firebase", name = "firebase-crashly
 
 barcode-scanner = { group = "com.google.android.gms", name = "play-services-code-scanner", version.ref = "codeScanner" }
 
+retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
+retrofit-json-convertor = { group = "com.squareup.retrofit2", name = "converter-gson", version.ref = "retrofit" }
+
+okhttp-bom = { group = "com.squareup.okhttp3", name = "okhttp-bom", version.ref = "okhttp-bom" }
+okhttp = { group = "com.squareup.okhttp3", name = "okhttp" }
+okhttp-logging = { group = "com.squareup.okhttp3", name = "logging-interceptor" }
+
+serilization = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "serilization" }
+
+lottie = { group = "com.airbnb.android", name = "lottie-compose", version.ref = "lottie" }
+
+coil = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
 
 
 [bundles]
@@ -74,7 +93,14 @@ lifecycle = [
     "androidx-lifecycle-viewmodel-ktx",
     "androidx-lifecycle-extensions"
 ]
-
+okhttp = [
+    "okhttp",
+    "okhttp-logging"
+]
+retrofit = [
+    "retrofit",
+    "retrofit-json-convertor"
+]
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
@@ -84,5 +110,6 @@ hilt = { id = "com.google.dagger.hilt.android", version.ref = "dagger-hilt" }
 googleServices = { id = "com.google.gms.google-services", version.ref = "googleServicesPlugin" }
 firebaseCrashlytics = { id = "com.google.firebase.crashlytics", version.ref = "firebaseCrashlyticsPlugin" }
 spotless = { id = "com.diffplug.gradle.spotless", version.ref = "spotless" }
+serilization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "serilization-plugin" }
 androidLibrary = { id = "com.android.library", version.ref = "agp" }
 

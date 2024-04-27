@@ -38,4 +38,17 @@ dependencies {
 
     //barcode
     implementation(libs.barcode.scanner)
+
+    //lifecycle
+    implementation(libs.bundles.lifecycle)
+
+
+    //Coroutines
+    implementation(libs.kotlinx.coroutines)
+
+    //lottie
+    implementation(libs.lottie)
+
+    //coil
+    implementation(libs.coil)
 }

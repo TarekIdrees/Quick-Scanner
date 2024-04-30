@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="qr_barcode_scanner">QR &amp; Barcode Scanner</string>
+    <string name="scanner_click_instruction">Click on the icon above to scan</string>
+    <string name="wifi">Wifi</string>
+    <string name="contact">Contact</string>
+    <string name="email">Email</string>
+    <string name="location">Location</string>
+    <string name="link">Link</string>
+    <string name="product">Product</string>
+    <string name="supported_qr_barcode_items">Supported QR &amp; Barcode items</string>
+</resources>

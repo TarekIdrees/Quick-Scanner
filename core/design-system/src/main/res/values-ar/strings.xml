@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="qr_barcode_scanner">سكانر QR و Barcode</string>
+    <string name="scanner_click_instruction">اضغط على الأيقونة أعلاه لكي تقوم بعملية المسح</string>
+    <string name="wifi">وايفاي</string>
+    <string name="contact">معلومات شخصية</string>
+    <string name="email">ايميل</string>
+    <string name="location">موقع</string>
+    <string name="link">رابط</string>
+    <string name="product">منتج</string>
+    <string name="supported_qr_barcode_items">الأغراض المدعومة في عملية المسح:</string>
+</resources>

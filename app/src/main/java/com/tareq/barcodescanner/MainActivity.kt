@@ -6,13 +6,15 @@ import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.tareq.design_system.ui.BarcodeScannerTheme
+import com.tareq.design_system.ui.background
 import com.tareq.scanner.ScannerScreen
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -27,11 +29,15 @@ class MainActivity : ComponentActivity() {
         )
         setContent {
             BarcodeScannerTheme {
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    ScannerScreen()
+                Scaffold(
+                    modifier = Modifier.drawBehind { drawRect(background) },
+                    bottomBar = {}
+                ) { paddingValues ->
+                    ScannerScreen(
+                        modifier = Modifier
+                            .padding(paddingValues)
+                            .fillMaxSize()
+                    )
                 }
             }
         }

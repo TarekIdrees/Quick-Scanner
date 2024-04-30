@@ -29,7 +29,7 @@ retrofit = "2.9.0"
 serilization-plugin = "1.9.22"
 serilization = "1.6.3"
 lottie = "4.2.0"
-
+immutable-collection = "0.3.6"
 
 
 
@@ -84,6 +84,7 @@ lottie = { group = "com.airbnb.android", name = "lottie-compose", version.ref = 
 
 coil = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
 
+kotlinx-immutable-collections = { group = "org.jetbrains.kotlinx", name = "kotlinx-collections-immutable", version.ref = "immutable-collection" }
 
 [bundles]
 hilt = ["dagger-hilt", "hilt-navigation"]

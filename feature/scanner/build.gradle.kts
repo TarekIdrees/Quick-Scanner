@@ -31,6 +31,8 @@ dependencies {
 
     //Modules
     implementation(projects.core.designSystem)
+    implementation(projects.core.model)
+    implementation(projects.core.domain)
 
     //Hilt
     implementation(libs.bundles.hilt)
@@ -51,4 +53,7 @@ dependencies {
 
     //coil
     implementation(libs.coil)
+
+    //Immutable collections
+    implementation(libs.kotlinx.immutable.collections)
 }

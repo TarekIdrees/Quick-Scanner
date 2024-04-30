@@ -56,6 +56,7 @@ dependencies {
     //Modules
     implementation(projects.core.designSystem)
     implementation(projects.feature.scanner)
+    implementation(projects.core.data)
 
     //Hilt
     implementation(libs.bundles.hilt)

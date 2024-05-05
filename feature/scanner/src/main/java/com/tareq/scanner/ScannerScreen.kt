@@ -24,6 +24,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.tareq.scanner.composable.ScanItem
 import com.tareq.scanner.composable.ScannerSchema
 import com.tareq.core.design.system.R
+import com.tareq.design_system.components.ContentVisibilityAnimation
+import com.tareq.scanner.composable.ScanLoadingPlaceholder
+import com.tareq.scanner.composable.WifiCard
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
@@ -32,40 +35,55 @@ fun ScannerScreen(
     viewModel: ScannerViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(horizontal = 16.dp, vertical = 16.dp)
-            .verticalScroll(rememberScrollState()),
-        verticalArrangement = Arrangement.SpaceBetween
-    ) {
+    ContentVisibilityAnimation(state = uiState.isLoading) {
+        ScanLoadingPlaceholder()
+    }
+    ContentVisibilityAnimation(state = uiState.isContentVisible()) {
         Column(
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+            modifier = modifier
+                .fillMaxSize()
+                .padding(horizontal = 16.dp, vertical = 16.dp)
+                .verticalScroll(rememberScrollState()),
+            verticalArrangement = Arrangement.SpaceBetween
         ) {
-            Text(
-                text = stringResource(R.string.supported_qr_barcode_items),
-                style = MaterialTheme.typography.headlineMedium,
-                color = MaterialTheme.colorScheme.onSurface
-            )
-            FlowRow(
-                modifier = Modifier.wrapContentHeight(),
-                verticalArrangement = Arrangement.spacedBy(8.dp),
-                horizontalArrangement = Arrangement.spacedBy(16.dp),
+            Column(
+                verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                uiState.scanItems.forEach { scanItem ->
-                    ScanItem(
-                        modifier = Modifier.wrapContentWidth(align = Alignment.Start),
-                        itemIcon = scanItem.icon,
-                        itemName = scanItem.name
-                    )
+                Text(
+                    text = stringResource(R.string.supported_qr_barcode_items),
+                    style = MaterialTheme.typography.headlineMedium,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+                FlowRow(
+                    modifier = Modifier.wrapContentHeight(),
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                    horizontalArrangement = Arrangement.spacedBy(16.dp),
+                ) {
+                    uiState.scanItems.forEach { scanItem ->
+                        ScanItem(
+                            modifier = Modifier.wrapContentWidth(align = Alignment.Start),
+                            itemIcon = scanItem.icon,
+                            itemName = scanItem.name
+                        )
+                    }
                 }
             }
+            ScannerSchema(
+                modifier = Modifier
+                    .align(Alignment.CenterHorizontally)
+                    .weight(1f),
+                onClickScannerIcon = viewModel::onClickScanButton
+            )
         }
-        ScannerSchema(
-            modifier = Modifier
-                .align(Alignment.CenterHorizontally)
-                .weight(1f),
-            onClickScannerIcon = viewModel::onClickScanButton
+    }
+    ContentVisibilityAnimation(state = uiState.scanItemCategory == ScanItemCategory.WIFI) {
+        WifiCard(
+            password = uiState.wifiFields.password,
+            ssid = uiState.wifiFields.ssid,
+            encryptionType = uiState.wifiFields.encryptionType,
+            scanDate = uiState.scanDate,
+            onClickArchive = {},
+            onClickBackArrow = viewModel::onClickBackArrow
         )
     }
 }

@@ -9,4 +9,10 @@
     <string name="link">رابط</string>
     <string name="product">منتج</string>
     <string name="supported_qr_barcode_items">الأغراض المدعومة في عملية المسح:</string>
+
+    <string name="password">كلمة السر</string>
+    <string name="ssid">SSID</string>
+    <string name="encryption_type">نوع الحماية</string>
+    <string name="scan_date">تاريخ المسح</string>
+
 </resources>

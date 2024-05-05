@@ -9,4 +9,10 @@
     <string name="link">Link</string>
     <string name="product">Product</string>
     <string name="supported_qr_barcode_items">Supported QR &amp; Barcode items</string>
+
+    <string name="password">Password</string>
+    <string name="ssid">SSID</string>
+    <string name="encryption_type">Encryption Type</string>
+    <string name="scan_date">Scan Date</string>
+
 </resources>

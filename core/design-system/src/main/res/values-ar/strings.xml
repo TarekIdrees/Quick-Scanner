@@ -15,4 +15,13 @@
     <string name="encryption_type">نوع الحماية</string>
     <string name="scan_date">تاريخ المسح</string>
 
+    <string name="name">الاسم</string>
+    <string name="title">المهنة</string>
+    <string name="emails">البريد الالكتروني</string>
+    <string name="phone_numbers">ارقام الهاتف</string>
+    <string name="addressees">العناوين</string>
+    <string name="not_found">لا يوجد</string>
+    <string name="organization">الشركة</string>
+    <string name="websites">المواقع</string>
+
 </resources>

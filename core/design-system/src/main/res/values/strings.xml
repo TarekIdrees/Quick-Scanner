@@ -15,4 +15,13 @@
     <string name="encryption_type">Encryption Type</string>
     <string name="scan_date">Scan Date</string>
 
+    <string name="name">Name</string>
+    <string name="title">Title</string>
+    <string name="emails">Emails</string>
+    <string name="phone_numbers">Phone Numbers</string>
+    <string name="addressees">Addressees</string>
+    <string name="not_found">Not Found</string>
+    <string name="organization">Organization</string>
+    <string name="websites">Websites</string>
+
 </resources>

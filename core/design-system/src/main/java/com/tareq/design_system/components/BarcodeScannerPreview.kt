@@ -14,6 +14,7 @@ import androidx.compose.ui.tooling.preview.Preview
     name = "Preview Night",
     showBackground = true,
     uiMode = Configuration.UI_MODE_NIGHT_YES,
-    backgroundColor = 0
+    backgroundColor = 0,
+    locale = "ar"
 )
 annotation class BarcodeScannerPreview

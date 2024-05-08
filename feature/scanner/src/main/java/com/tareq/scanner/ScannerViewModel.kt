@@ -8,7 +8,9 @@ import com.google.mlkit.vision.codescanner.GmsBarcodeScanner
 import com.tareq.domain.GetScanItemsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.toImmutableList
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -24,6 +26,9 @@ class ScannerViewModel @Inject constructor(
 
     private val _uiState = MutableStateFlow(ScannerUiState())
     val uiState = _uiState.asStateFlow()
+
+    private val _effect = MutableSharedFlow<ScannerEffect>()
+    val effect = _effect.asSharedFlow()
 
     private val currentDate: String by lazy {
         LocalDate.now().toString()
@@ -41,7 +46,11 @@ class ScannerViewModel @Inject constructor(
                     _uiState.update { it.copy(scanDate = currentDate) }
                     when (barcode.valueType) {
                         Barcode.TYPE_EMAIL -> {
+                            Log.d("Tarek", "${barcode.email!!}")
                             Log.d("Tarek", "${barcode.email!!.body}")
+                            Log.d("Tarek", "${barcode.email!!.type}")
+                            Log.d("Tarek", "${barcode.email!!.address}")
+                            Log.d("Tarek", "${barcode.email!!.subject}")
                         }
 
                         Barcode.TYPE_WIFI -> {
@@ -49,11 +58,15 @@ class ScannerViewModel @Inject constructor(
                         }
 
                         Barcode.TYPE_URL -> {
-                            Log.d("Tarek", "${barcode.url!!.url}")
+                            executeBrowserLinkBarcode(barcode)
                         }
 
                         Barcode.TYPE_PRODUCT -> {
                             _uiState.update { it.copy(barcode = barcode.displayValue ?: "") }
+                        }
+
+                        Barcode.TYPE_CONTACT_INFO -> {
+                            updateContactFields(barcode)
                         }
 
                         else -> {
@@ -91,6 +104,42 @@ class ScannerViewModel @Inject constructor(
                 )
             }
         } ?: showUnsupportedBarcodeMessage()
+    }
+
+    private fun updateContactFields(barcode: Barcode) {
+        barcode.contactInfo?.let { contactInfo ->
+            _uiState.update {
+                it.copy(
+                    scanItemCategory = ScanItemCategory.CONTACT_INFO,
+                    contactFields = ContactFields(
+                        name = contactInfo.name?.formattedName ?: "",
+                        title = contactInfo.title ?: "",
+                        phoneNumbers = contactInfo.phones.mapNotNull { phone -> phone.number }
+                            .toImmutableList(),
+                        emails = contactInfo.emails.mapNotNull { email -> email.address }
+                            .toImmutableList(),
+                        addresses = contactInfo.addresses.mapNotNull { address ->
+                            address.addressLines.joinToString(", ")
+                        }.toImmutableList(),
+                        organization = contactInfo.organization ?: "",
+                        urls = contactInfo.urls.mapNotNull { url -> url }.toImmutableList()
+                    )
+                )
+            }
+        } ?: showUnsupportedBarcodeMessage()
+    }
+
+    private fun executeBrowserLinkBarcode(barcode: Barcode) {
+        val url = barcode.url?.url
+        run {
+            if (url != null) {
+                viewModelScope.launch {
+                    _effect.emit(ScannerEffect.OpenUrl(url))
+                }
+            } else {
+                showUnsupportedBarcodeMessage()
+            }
+        }
     }
 
     private fun showUnsupportedBarcodeMessage() {

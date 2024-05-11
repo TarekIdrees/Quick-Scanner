@@ -3,6 +3,7 @@ package com.tareq.scanner
 
 import android.content.Intent
 import android.net.Uri
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -33,6 +34,7 @@ import com.tareq.scanner.composable.ScannerSchema
 import com.tareq.core.design.system.R
 import com.tareq.design_system.components.ContentVisibilityAnimation
 import com.tareq.scanner.composable.ContactCard
+import com.tareq.scanner.composable.EmailCard
 import com.tareq.scanner.composable.ScanLoadingPlaceholder
 import com.tareq.scanner.composable.WifiCard
 
@@ -58,7 +60,13 @@ fun ScannerScreen(
                     }
                 }
 
-                is ScannerEffect.ShowMessage -> {}
+                is ScannerEffect.ShowUnSupportedQBcodeMessage -> {
+                    Toast.makeText(
+                        context,
+                        R.string.unsupported_QB_code,
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
             }
         }
     }
@@ -123,6 +131,17 @@ fun ScannerScreen(
             addressees = uiState.contactFields.addresses,
             organization = uiState.contactFields.organization,
             urls = uiState.contactFields.urls,
+            scanDate = uiState.scanDate,
+            onClickBackArrow = viewModel::onClickBackArrow,
+            onClickArchive = {},
+        )
+    }
+
+    ContentVisibilityAnimation(state = uiState.scanItemCategory == ScanItemCategory.EMAIL) {
+        EmailCard(
+            email = uiState.emailFields.email,
+            body = uiState.emailFields.body,
+            subject = uiState.emailFields.subject,
             scanDate = uiState.scanDate,
             onClickBackArrow = viewModel::onClickBackArrow,
             onClickArchive = {},

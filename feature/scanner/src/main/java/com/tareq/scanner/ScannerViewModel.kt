@@ -1,6 +1,6 @@
 package com.tareq.scanner
 
-import android.util.Log
+
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.mlkit.vision.barcode.common.Barcode
@@ -38,6 +38,13 @@ class ScannerViewModel @Inject constructor(
         loadScanItems()
     }
 
+    private fun loadScanItems() {
+        viewModelScope.launch {
+            val scanItems = getScanItemsUseCase().toImmutableList()
+            _uiState.update { it.copy(scanItems = scanItems) }
+        }
+    }
+
     fun onClickScanButton() {
         _uiState.update { it.copy(isLoading = true) }
         try {
@@ -46,11 +53,7 @@ class ScannerViewModel @Inject constructor(
                     _uiState.update { it.copy(scanDate = currentDate) }
                     when (barcode.valueType) {
                         Barcode.TYPE_EMAIL -> {
-                            Log.d("Tarek", "${barcode.email!!}")
-                            Log.d("Tarek", "${barcode.email!!.body}")
-                            Log.d("Tarek", "${barcode.email!!.type}")
-                            Log.d("Tarek", "${barcode.email!!.address}")
-                            Log.d("Tarek", "${barcode.email!!.subject}")
+                            updateEmailFields(barcode)
                         }
 
                         Barcode.TYPE_WIFI -> {
@@ -70,25 +73,41 @@ class ScannerViewModel @Inject constructor(
                         }
 
                         else -> {
-                            Log.d("Tarek", "${barcode.format}")
-                            Log.d("Tarek", "${barcode.valueType}")
+                            showUnsupportedBarcodeMessage()
                         }
                     }
                 }
                 .addOnCanceledListener {
-
+                    _uiState.update { it.copy(isLoading = false) }
                 }
                 .addOnFailureListener {
-                    _uiState.update { it.copy(isError = true) }
+                    _uiState.update { it.copy(isError = true, isLoading = false) }
+                    showUnsupportedBarcodeMessage()
                 }
             _uiState.update { it.copy(isLoading = false) }
         } catch (e: Exception) {
             _uiState.update { it.copy(isLoading = false, isError = true) }
+            showUnsupportedBarcodeMessage()
         }
     }
 
     fun onClickBackArrow() {
         _uiState.update { it.copy(scanItemCategory = ScanItemCategory.EMPTY) }
+    }
+
+    private fun updateEmailFields(barcode: Barcode) {
+        barcode.email?.let { email ->
+            _uiState.update {
+                it.copy(
+                    scanItemCategory = ScanItemCategory.EMAIL,
+                    emailFields = EmailFields(
+                        body = email.body.toString(),
+                        subject = email.subject.toString(),
+                        email = email.address.toString()
+                    )
+                )
+            }
+        } ?: showUnsupportedBarcodeMessage()
     }
 
     private fun updateWifiFields(barcode: Barcode) {
@@ -143,13 +162,8 @@ class ScannerViewModel @Inject constructor(
     }
 
     private fun showUnsupportedBarcodeMessage() {
-        // fire toast message
-    }
-
-    private fun loadScanItems() {
         viewModelScope.launch {
-            val scanItems = getScanItemsUseCase().toImmutableList()
-            _uiState.update { it.copy(scanItems = scanItems) }
+            _effect.emit(ScannerEffect.ShowUnSupportedQBcodeMessage)
         }
     }
 

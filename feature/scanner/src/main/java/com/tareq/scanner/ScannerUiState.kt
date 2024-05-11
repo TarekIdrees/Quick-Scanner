@@ -13,6 +13,7 @@ data class ScannerUiState(
     val barcode: String = "",
     val wifiFields: WifiFields = WifiFields(),
     val contactFields: ContactFields = ContactFields(),
+    val emailFields: EmailFields = EmailFields(),
     val scanItemCategory: ScanItemCategory = ScanItemCategory.EMPTY,
     val scanItems: ImmutableList<ScanItem> = persistentListOf(),
     val scanDate: String = "",
@@ -29,7 +30,7 @@ data class WifiFields(
 data class ContactFields(
     val name: String = "",
     val title: String = "",
-    val phoneNumbers:ImmutableList<String> = persistentListOf(),
+    val phoneNumbers: ImmutableList<String> = persistentListOf(),
     val emails: ImmutableList<String> = persistentListOf(),
     val addresses: ImmutableList<String> = persistentListOf(),
     val urls: ImmutableList<String> = persistentListOf(),
@@ -37,15 +38,19 @@ data class ContactFields(
 )
 
 @Immutable
+data class EmailFields(
+    val email: String = "",
+    val subject: String = "",
+    val body: String = "",
+)
+
+@Immutable
 enum class ScanItemCategory {
     EMPTY,
     WIFI,
     EMAIL,
-    LOCATION,
     PRODUCT,
-    URL,
     CONTACT_INFO,
-    UN_SUPPORTED
 }
 
 fun ScannerUiState.isContentVisible() =

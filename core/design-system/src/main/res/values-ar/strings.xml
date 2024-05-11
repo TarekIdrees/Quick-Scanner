@@ -24,4 +24,9 @@
     <string name="organization">الشركة</string>
     <string name="websites">المواقع</string>
 
+    <string name="body">النص</string>
+    <string name="subject">الموضوع</string>
+
+    <string name="unsupported_QB_code"> صيغة الكود غير مدعومة </string>
+
 </resources>

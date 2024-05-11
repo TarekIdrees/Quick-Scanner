@@ -24,4 +24,9 @@
     <string name="organization">Organization</string>
     <string name="websites">Websites</string>
 
+    <string name="body">Body</string>
+    <string name="subject">Subject</string>
+
+    <string name="unsupported_QB_code">Unsupported QB code</string>
+
 </resources>

@@ -20,13 +20,29 @@
     <string name="emails">البريد الالكتروني</string>
     <string name="phone_numbers">ارقام الهاتف</string>
     <string name="addressees">العناوين</string>
-    <string name="not_found">لا يوجد</string>
+    <string name="not_found_label">لا يوجد</string>
     <string name="organization">الشركة</string>
     <string name="websites">المواقع</string>
 
     <string name="body">النص</string>
     <string name="subject">الموضوع</string>
 
-    <string name="unsupported_QB_code"> صيغة الكود غير مدعومة </string>
+    <string name="barcode">كودالبار</string>
+    <string name="description">الوصف</string>
+    <string name="brand">الماركة</string>
+    <string name="manufacturer">المصنع</string>
+    <string name="category">النوع</string>
+    <string name="ingredients">المكونات</string>
+    <string name="size">القياس</string>
+
+    <string name="unsupported_QrBr_code"> صيغة الكود غير مدعومة </string>
+    <string name="no_internet_connection">لا يوجد اتصال بالإنترنت. يرجى التحقق من إعدادات الشبكة والمحاولة مرة أخرى.</string>
+    <string name="forbidden">ليس لديك إذن للوصول إلى هذا الخاصية. الرجاء الاتصال بالمسؤول للحصول على المساعدة.</string>
+    <string name="unauthorized">تم رفض الوصول للمستخدم غير المصرح له  </string>
+    <string name="server_error">أُووبس! حدث خطأ ما من جانبنا. يرجى المحاولة مرة أخرى لاحقًا أو الاتصال بالدعم للحصول على المساعدة</string>
+    <string name="serialization_error">خطأ في معالجة البيانات من الخادم. يرجى المحاولة مرة أخرى لاحقًا أو الاتصال بالدعم للحصول على المساعدة.</string>
+    <string name="unknown_error">حدث خطأ غير معروف. يرجى المحاولة مرة أخرى لاحقًا أو الاتصال بالدعم للحصول على المساعدة.</string>
+    <string name="exceed_limit">لقد تجاوزت الحد الأقصى. يرجى الاتصال بالدعم للحصول على المساعدة </string>
+    <string name="not_found">لا يوجد منتج بهذا الاسم في سجل البيانات لدينا. إذا كنت ترغب في إضافتها إلى سجلاتنا، يرجى الاتصال بالدعم للحصول على المساعدة</string>
 
 </resources>

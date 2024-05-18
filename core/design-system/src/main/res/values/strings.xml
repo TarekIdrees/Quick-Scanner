@@ -20,13 +20,29 @@
     <string name="emails">Emails</string>
     <string name="phone_numbers">Phone Numbers</string>
     <string name="addressees">Addressees</string>
-    <string name="not_found">Not Found</string>
+    <string name="not_found_label">Not Found</string>
     <string name="organization">Organization</string>
     <string name="websites">Websites</string>
 
     <string name="body">Body</string>
     <string name="subject">Subject</string>
 
-    <string name="unsupported_QB_code">Unsupported QB code</string>
+    <string name="barcode">Barcode</string>
+    <string name="description">Description</string>
+    <string name="brand">Brand</string>
+    <string name="manufacturer">Manufacturer</string>
+    <string name="category">Category</string>
+    <string name="ingredients">Ingredients</string>
+    <string name="size">Size</string>
+
+    <string name="unsupported_QrBr_code">Unsupported QrBr code</string>
+    <string name="no_internet_connection">"No internet connection. Please check your network settings and try again.</string>
+    <string name="forbidden">You do not have permission to access this resource. Please contact the administrator for assistance.</string>
+    <string name="unauthorized">Access denied for unauthorized user</string>
+    <string name="server_error">Oops! Something went wrong on our end. Please try again later or contact support for assistance</string>
+    <string name="serialization_error">Oops! Something went wrong on our end. Please try again later or contact support for assistance</string>
+    <string name="unknown_error">An unknown error occurred. Please try again later or contact support for assistance.</string>
+    <string name="exceed_limit">You have exceeded the limit.Please contact support for assistance </string>
+    <string name="not_found">There is no product with this name in our data record. If you would like to add it to our records, Please contact support for assistance </string>
 
 </resources>

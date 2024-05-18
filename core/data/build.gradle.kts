@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.jetbrainsKotlinAndroid)
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt)
+    alias(libs.plugins.serilization)
 }
 
 android {
@@ -23,11 +24,10 @@ dependencies {
     //Modules
     implementation(projects.core.model)
     implementation(projects.core.designSystem)
+    implementation(projects.core.domain)
 
     //Networking
-    implementation(platform(libs.okhttp.bom))
-    implementation(libs.bundles.okhttp)
-    implementation(libs.bundles.retrofit)
+    implementation(libs.bundles.ktor)
 
     //Hilt
     implementation(libs.bundles.hilt)

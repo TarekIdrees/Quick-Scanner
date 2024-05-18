@@ -37,14 +37,15 @@ internal fun BaseCard(
         modifier = modifier
             .fillMaxWidth()
             .drawBehind { drawRect(color = card) }
-            .padding(16.dp)
+            .padding(vertical = 16.dp)
             .verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .align(Alignment.Start),
+                .align(Alignment.Start)
+                .padding(horizontal = 16.dp),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             IconButton(

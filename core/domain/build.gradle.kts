@@ -20,7 +20,6 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
 
     //Modules
-    implementation(projects.core.data)
     implementation(projects.core.model)
 
     //Hilt

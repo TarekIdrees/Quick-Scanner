@@ -18,7 +18,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -29,23 +28,26 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat.startActivity
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.tareq.scanner.composable.ScanItem
 import com.tareq.scanner.composable.ScannerSchema
 import com.tareq.core.design.system.R
 import com.tareq.design_system.components.ContentVisibilityAnimation
+import com.tareq.model.local.ScanItem
 import com.tareq.scanner.composable.ContactCard
 import com.tareq.scanner.composable.EmailCard
+import com.tareq.scanner.composable.ErrorPlaceholder
+import com.tareq.scanner.composable.ProductCard
 import com.tareq.scanner.composable.ScanLoadingPlaceholder
 import com.tareq.scanner.composable.WifiCard
+import kotlinx.collections.immutable.ImmutableList
 
-@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun ScannerScreen(
-    modifier: Modifier = Modifier,
     viewModel: ScannerViewModel = hiltViewModel(),
 ) {
     val context = LocalContext.current
-    val uiState by viewModel.uiState.collectAsState()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val isContentVisible by remember {
         derivedStateOf { uiState.isContentVisible() }
     }
@@ -60,10 +62,10 @@ fun ScannerScreen(
                     }
                 }
 
-                is ScannerEffect.ShowUnSupportedQBcodeMessage -> {
+                is ScannerEffect.ShowToastMessage -> {
                     Toast.makeText(
                         context,
-                        R.string.unsupported_QB_code,
+                        uiState.errorMessageFile,
                         Toast.LENGTH_SHORT
                     ).show()
                 }
@@ -71,12 +73,52 @@ fun ScannerScreen(
         }
     }
 
-    ContentVisibilityAnimation(state = uiState.isLoading) {
+    ScannerContent(
+        isContentVisible = isContentVisible,
+        isLoading = uiState.isLoading,
+        isError = uiState.isError,
+        errorMessageFile = uiState.errorMessageFile,
+        scanItems = uiState.scanItems,
+        scanItemCategory = uiState.scanItemCategory,
+        wifiFields = uiState.wifiFields,
+        contactFields = uiState.contactFields,
+        emailFields = uiState.emailFields,
+        productFields = uiState.productFields,
+        scanDate = uiState.scanDate,
+        onClickBackArrow = viewModel::onClickBackArrow,
+        onClickScanButton = viewModel::onClickScanButton
+    )
+}
+
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+internal fun ScannerContent(
+    isContentVisible: Boolean,
+    isLoading: Boolean,
+    isError: Boolean,
+    errorMessageFile: Int,
+    scanItems: ImmutableList<ScanItem>,
+    scanItemCategory: ScanItemCategory,
+    wifiFields: WifiFields,
+    contactFields: ContactFields,
+    emailFields: EmailFields,
+    productFields: ProductFields,
+    scanDate: String,
+    onClickBackArrow: () -> Unit,
+    onClickScanButton: () -> Unit,
+) {
+    ContentVisibilityAnimation(state = isLoading) {
         ScanLoadingPlaceholder()
+    }
+    ContentVisibilityAnimation(state = isError) {
+        ErrorPlaceholder(
+            messageFile = errorMessageFile,
+            onClickBackArrow = onClickBackArrow
+        )
     }
     ContentVisibilityAnimation(state = isContentVisible) {
         Column(
-            modifier = modifier
+            modifier = Modifier
                 .fillMaxSize()
                 .padding(horizontal = 16.dp, vertical = 16.dp)
                 .verticalScroll(rememberScrollState()),
@@ -95,7 +137,7 @@ fun ScannerScreen(
                     verticalArrangement = Arrangement.spacedBy(8.dp),
                     horizontalArrangement = Arrangement.spacedBy(16.dp),
                 ) {
-                    uiState.scanItems.forEach { scanItem ->
+                    scanItems.forEach { scanItem ->
                         ScanItem(
                             modifier = Modifier.wrapContentWidth(align = Alignment.Start),
                             itemIcon = scanItem.icon,
@@ -108,42 +150,57 @@ fun ScannerScreen(
                 modifier = Modifier
                     .align(Alignment.CenterHorizontally)
                     .weight(1f),
-                onClickScannerIcon = viewModel::onClickScanButton
+                onClickScannerIcon = onClickScanButton
             )
         }
     }
-    ContentVisibilityAnimation(state = uiState.scanItemCategory == ScanItemCategory.WIFI) {
+    ContentVisibilityAnimation(state = scanItemCategory == ScanItemCategory.WIFI) {
         WifiCard(
-            password = uiState.wifiFields.password,
-            ssid = uiState.wifiFields.ssid,
-            encryptionType = uiState.wifiFields.encryptionType,
-            scanDate = uiState.scanDate,
+            password = wifiFields.password,
+            ssid = wifiFields.ssid,
+            encryptionType = wifiFields.encryptionType,
+            scanDate = scanDate,
             onClickArchive = {},
-            onClickBackArrow = viewModel::onClickBackArrow
+            onClickBackArrow = onClickBackArrow
         )
     }
-    ContentVisibilityAnimation(state = uiState.scanItemCategory == ScanItemCategory.CONTACT_INFO) {
+    ContentVisibilityAnimation(state = scanItemCategory == ScanItemCategory.CONTACT_INFO) {
         ContactCard(
-            name = uiState.contactFields.name,
-            title = uiState.contactFields.title,
-            emails = uiState.contactFields.emails,
-            phoneNumbers = uiState.contactFields.phoneNumbers,
-            addressees = uiState.contactFields.addresses,
-            organization = uiState.contactFields.organization,
-            urls = uiState.contactFields.urls,
-            scanDate = uiState.scanDate,
-            onClickBackArrow = viewModel::onClickBackArrow,
+            name = contactFields.name,
+            title = contactFields.title,
+            emails = contactFields.emails,
+            phoneNumbers = contactFields.phoneNumbers,
+            addressees = contactFields.addresses,
+            organization = contactFields.organization,
+            urls = contactFields.urls,
+            scanDate = scanDate,
+            onClickBackArrow = onClickBackArrow,
             onClickArchive = {},
         )
     }
-
-    ContentVisibilityAnimation(state = uiState.scanItemCategory == ScanItemCategory.EMAIL) {
+    ContentVisibilityAnimation(state = scanItemCategory == ScanItemCategory.EMAIL) {
         EmailCard(
-            email = uiState.emailFields.email,
-            body = uiState.emailFields.body,
-            subject = uiState.emailFields.subject,
-            scanDate = uiState.scanDate,
-            onClickBackArrow = viewModel::onClickBackArrow,
+            email = emailFields.email,
+            body = emailFields.body,
+            subject = emailFields.subject,
+            scanDate = scanDate,
+            onClickBackArrow = onClickBackArrow,
+            onClickArchive = {},
+        )
+    }
+    ContentVisibilityAnimation(state = scanItemCategory == ScanItemCategory.PRODUCT) {
+        ProductCard(
+            barcode = productFields.barcode,
+            title = productFields.title,
+            description = productFields.description,
+            brand = productFields.brand,
+            manufacturer = productFields.manufacturer,
+            category = productFields.category,
+            images = productFields.images,
+            ingredients = productFields.ingredients,
+            size = productFields.size,
+            scanDate = scanDate,
+            onClickBackArrow = onClickBackArrow,
             onClickArchive = {},
         )
     }

@@ -63,6 +63,7 @@ dependencies {
     implementation(projects.core.designSystem)
     implementation(projects.feature.scanner)
     implementation(projects.core.data)
+    implementation(projects.core.domain)
 
     //Hilt
     implementation(libs.bundles.hilt)
@@ -81,4 +82,7 @@ dependencies {
 
     //Barcode
     implementation(libs.barcode.scanner)
+
+    //ktor
+    implementation(libs.bundles.ktor)
 }

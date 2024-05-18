@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -25,7 +26,7 @@ internal fun MultiInformationHeadline(
     @StringRes titleStringId: Int,
     headlines: ImmutableList<String>
 ) {
-    Column(modifier = modifier) {
+    Column(modifier = modifier.padding(horizontal = 16.dp)) {
         Text(
             text = stringResource(titleStringId),
             style = MaterialTheme.typography.labelMedium,
@@ -33,7 +34,7 @@ internal fun MultiInformationHeadline(
         )
         if (headlines.isEmpty()) {
             Text(
-                text = stringResource(R.string.not_found),
+                text = stringResource(R.string.not_found_label),
                 style = MaterialTheme.typography.headlineMedium,
                 color = MaterialTheme.colorScheme.onSurface
             )

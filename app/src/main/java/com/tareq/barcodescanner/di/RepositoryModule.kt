@@ -1,6 +1,6 @@
 package com.tareq.barcodescanner.di
 
-import com.tareq.repository.ScannerRepository
+import com.tareq.domain.repository.ScannerRepository
 import com.tareq.repository.ScannerRepositoryImpl
 import dagger.Binds
 import dagger.Module

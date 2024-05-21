@@ -10,6 +10,8 @@ import com.tareq.domain.Result
 import com.tareq.domain.usecase.GetProductByBarcodeUseCase
 import com.tareq.domain.usecase.GetScanItemsUseCase
 import com.tareq.core.design.system.R
+import com.tareq.domain.DatabaseOperation
+import com.tareq.domain.usecase.InsertProductIntoDatabaseUseCase
 import com.tareq.model.Product
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.toImmutableList
@@ -28,7 +30,8 @@ import javax.inject.Inject
 class ScannerViewModel @Inject constructor(
     private val scanner: GmsBarcodeScanner,
     private val getScanItemsUseCase: GetScanItemsUseCase,
-    private val getProductByBarcodeUseCase: GetProductByBarcodeUseCase
+    private val getProductByBarcodeUseCase: GetProductByBarcodeUseCase,
+    private val insertProductIntoDatabaseUseCase: InsertProductIntoDatabaseUseCase
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(ScannerUiState())
@@ -102,6 +105,25 @@ class ScannerViewModel @Inject constructor(
     fun onClickBackArrow() {
         _uiState.update { it.copy(scanItemCategory = ScanItemCategory.EMPTY, isError = false) }
     }
+
+    fun onClickArchive() {
+        when (uiState.value.scanItemCategory) {
+            ScanItemCategory.EMPTY -> {}
+            ScanItemCategory.WIFI -> {}
+            ScanItemCategory.EMAIL -> {}
+            ScanItemCategory.PRODUCT -> insertProductIntoDatabase(uiState.value.productFields)
+            ScanItemCategory.CONTACT_INFO -> {}
+        }
+    }
+
+    private fun insertProductIntoDatabase(productFields: ProductFields) {
+        viewModelScope.launch(Dispatchers.IO) {
+            when (insertProductIntoDatabaseUseCase(productFields.toProduct())) {
+                is DatabaseOperation.InComplete -> showToastMessage(R.string.item_archive_failed)
+                DatabaseOperation.Complete -> showToastMessage(R.string.item_archive_success)
+            }
+        }
+    }
     //endregion
 
     //region retrieve data
@@ -121,6 +143,7 @@ class ScannerViewModel @Inject constructor(
             }
         } ?: showToastMessage(R.string.unsupported_QrBr_code)
     }
+
     private fun getEncryptionType(encryptionNumber: Int): String {
         return when (encryptionNumber) {
             2 -> "TKIP (WPA)"
@@ -171,7 +194,7 @@ class ScannerViewModel @Inject constructor(
         } ?: showToastMessage(R.string.unsupported_QrBr_code)
     }
 
-    private fun handelErrorState(error: DataError) {
+    private fun handelErrorState(error: DataError.Network) {
         _uiState.update { it.copy(isError = true, isLoading = false) }
         when (error) {
             DataError.Network.NO_INTERNET -> showToastMessage(R.string.no_internet_connection)

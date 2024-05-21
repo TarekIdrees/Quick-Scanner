@@ -3,6 +3,7 @@ package com.tareq.scanner
 import androidx.annotation.StringRes
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
+import com.tareq.model.Product
 import com.tareq.model.local.ScanItem
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
@@ -58,6 +59,18 @@ data class ProductFields(
     val images: ImmutableList<String> = persistentListOf(),
     val ingredients: String = "",
     val size: String = ""
+)
+
+fun ProductFields.toProduct() = Product(
+    barcode = barcode,
+    title = title,
+    description = description,
+    brand = brand,
+    manufacturer = manufacturer,
+    category = category,
+    images = images,
+    ingredients = ingredients,
+    size = size
 )
 
 @Immutable

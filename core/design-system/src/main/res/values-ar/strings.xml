@@ -45,4 +45,7 @@
     <string name="exceed_limit">لقد تجاوزت الحد الأقصى. يرجى الاتصال بالدعم للحصول على المساعدة </string>
     <string name="not_found">لا يوجد منتج بهذا الاسم في سجل البيانات لدينا. إذا كنت ترغب في إضافتها إلى سجلاتنا، يرجى الاتصال بالدعم للحصول على المساعدة</string>
 
+    <string name="item_archive_success">تمت أرشفة العنصر بنجاح</string>
+    <string name="item_archive_failed">لم تتم أرشفة العنصر بسبب حدوث خطأ. يرجى المحاولة مرة أخرى</string>
+
 </resources>

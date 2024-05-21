@@ -86,6 +86,7 @@ fun ScannerScreen(
         productFields = uiState.productFields,
         scanDate = uiState.scanDate,
         onClickBackArrow = viewModel::onClickBackArrow,
+        onClickArchive = viewModel::onClickArchive,
         onClickScanButton = viewModel::onClickScanButton
     )
 }
@@ -105,6 +106,7 @@ internal fun ScannerContent(
     productFields: ProductFields,
     scanDate: String,
     onClickBackArrow: () -> Unit,
+    onClickArchive: () -> Unit,
     onClickScanButton: () -> Unit,
 ) {
     ContentVisibilityAnimation(state = isLoading) {
@@ -201,7 +203,7 @@ internal fun ScannerContent(
             size = productFields.size,
             scanDate = scanDate,
             onClickBackArrow = onClickBackArrow,
-            onClickArchive = {},
+            onClickArchive = onClickArchive,
         )
     }
 }

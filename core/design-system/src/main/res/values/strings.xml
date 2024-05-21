@@ -45,4 +45,7 @@
     <string name="exceed_limit">You have exceeded the limit.Please contact support for assistance </string>
     <string name="not_found">There is no product with this name in our data record. If you would like to add it to our records, Please contact support for assistance </string>
 
+    <string name="item_archive_success">The item has been archived successfully</string>
+    <string name="item_archive_failed">The item has not been archived according to an error.Please try again</string>
+
 </resources>

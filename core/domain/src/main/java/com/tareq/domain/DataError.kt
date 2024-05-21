@@ -11,4 +11,8 @@ sealed interface DataError: Error {
         EXCEED_LIMIT,
         NOT_FOUND,
     }
+
+    enum class Local: DataError {
+        INCOMPLETE
+    }
 }

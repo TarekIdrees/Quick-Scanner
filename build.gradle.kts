@@ -13,6 +13,7 @@ plugins {
     alias(libs.plugins.firebaseCrashlytics) apply false
     alias(libs.plugins.androidLibrary) apply false
     alias(libs.plugins.serilization) apply false
+    alias(libs.plugins.room) apply false
 }
 
 fun BaseExtension.defaultConfig() {

@@ -4,12 +4,16 @@ plugins {
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt)
     alias(libs.plugins.serilization)
+    alias(libs.plugins.room)
 }
 
 android {
     namespace = "com.tareq.core.data"
     kotlinOptions {
         jvmTarget = "1.8"
+    }
+    room {
+        schemaDirectory("$projectDir/schemas")
     }
 }
 
@@ -32,4 +36,11 @@ dependencies {
     //Hilt
     implementation(libs.bundles.hilt)
     ksp(libs.hilt.compiler)
+
+    //Room
+    implementation(libs.bundles.room)
+    ksp(libs.room.compiler)
+
+    //Gson
+    implementation(libs.gson)
 }

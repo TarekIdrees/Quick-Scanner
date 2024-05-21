@@ -30,8 +30,8 @@ serilization-plugin = "1.9.22"
 serilization = "1.6.3"
 lottie = "4.2.0"
 immutable-collection = "0.3.6"
-
-
+room-database = "2.6.1"
+gson = "2.10.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -72,6 +72,8 @@ ktor-client-logging = { module = "io.ktor:ktor-client-logging", version.ref = "k
 ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktor" }
 ktor-serialization = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
 
+gson = {module = "com.google.code.gson:gson",version.ref = "gson"}
+
 splash = { group = "androidx.core", name = "core-splashscreen", version.ref = "splash" }
 
 firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebase-bom" }
@@ -87,6 +89,10 @@ lottie = { group = "com.airbnb.android", name = "lottie-compose", version.ref = 
 coil = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
 
 kotlinx-immutable-collections = { group = "org.jetbrains.kotlinx", name = "kotlinx-collections-immutable", version.ref = "immutable-collection" }
+
+room-databse = { group = "androidx.room", name = "room-runtime", version.ref = "room-database" }
+room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room-database" }
+room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room-database" }
 
 [bundles]
 hilt = ["dagger-hilt", "hilt-navigation"]
@@ -104,6 +110,10 @@ ktor = [
     "ktor-client-content-negotiation",
     "ktor-client-auth"
 ]
+room = [
+    "room-databse",
+    "room-ktx"
+]
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
@@ -115,4 +125,5 @@ firebaseCrashlytics = { id = "com.google.firebase.crashlytics", version.ref = "f
 spotless = { id = "com.diffplug.gradle.spotless", version.ref = "spotless" }
 serilization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "serilization-plugin" }
 androidLibrary = { id = "com.android.library", version.ref = "agp" }
+room = { id = "androidx.room", version.ref = "room-database" }
 

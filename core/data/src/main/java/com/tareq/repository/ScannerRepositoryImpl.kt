@@ -2,7 +2,9 @@ package com.tareq.repository
 
 import com.tareq.data.local.ScanItemsSource
 import com.tareq.data.local.dao.ProductDao
+import com.tareq.data.local.dao.WifiDao
 import com.tareq.data.local.mapper.toProductEntity
+import com.tareq.data.local.mapper.toWifiEntity
 import com.tareq.data.remote.ApiCallResult
 import com.tareq.data.remote.ProductApi
 import com.tareq.data.remote.mapper.toProduct
@@ -11,13 +13,17 @@ import com.tareq.domain.DatabaseOperation
 import com.tareq.domain.Result
 import com.tareq.domain.repository.ScannerRepository
 import com.tareq.model.Product
+import com.tareq.model.Wifi
 import com.tareq.model.local.ScanItem
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class ScannerRepositoryImpl @Inject constructor(
     private val scanItemsSource: ScanItemsSource,
     private val productApi: ProductApi,
-    private val productDao: ProductDao
+    private val productDao: ProductDao,
+    private val wifiDao: WifiDao,
 ) : ScannerRepository {
     override suspend fun getScanItems(): List<ScanItem> {
         return scanItemsSource.scanItems
@@ -30,12 +36,41 @@ class ScannerRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun insertProduct(product: Product): DatabaseOperation {
-        return try {
-            productDao.insertProduct(product.toProductEntity())
-            DatabaseOperation.Complete
-        } catch (e: Exception) {
-            DatabaseOperation.InComplete(DataError.Local.INCOMPLETE)
+    override suspend fun insertProductIntoDatabase(
+        product: Product,
+        scanDate: String
+    ): DatabaseOperation {
+        return executeDatabaseOperation {
+            productDao.insertProduct(product.toProductEntity(scanDate = scanDate))
+        }
+    }
+
+    override suspend fun deleteProductFromDatabase(productId: String): DatabaseOperation {
+        return executeDatabaseOperation {
+            productDao.deleteProduct(productId)
+        }
+    }
+
+    override suspend fun insertWifiIntoDatabase(wifi: Wifi, scanDate: String): DatabaseOperation {
+        return executeDatabaseOperation {
+            wifiDao.insertWifi(wifi.toWifiEntity(scanDate = scanDate))
+        }
+    }
+
+    override suspend fun deleteWifiFromDatabase(wifiSSID: String): DatabaseOperation {
+        return executeDatabaseOperation {
+            wifiDao.deleteWifi(wifiSSID)
+        }
+    }
+
+    private suspend fun executeDatabaseOperation(operation: suspend () -> Unit): DatabaseOperation {
+        return withContext(Dispatchers.IO) {
+            try {
+                operation()
+                DatabaseOperation.Complete
+            } catch (e: Exception) {
+                DatabaseOperation.InComplete(DataError.Local.INCOMPLETE)
+            }
         }
     }
 }

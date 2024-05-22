@@ -3,7 +3,7 @@ package com.tareq.data.local.mapper
 import com.tareq.data.local.entity.ProductEntity
 import com.tareq.model.Product
 
-internal fun Product.toProductEntity() = ProductEntity(
+internal fun Product.toProductEntity(scanDate: String) = ProductEntity(
     barcode = barcode,
     title = title,
     description = description,
@@ -13,4 +13,5 @@ internal fun Product.toProductEntity() = ProductEntity(
     images = images,
     ingredients = ingredients,
     size = size,
+    scanDate = scanDate
 )

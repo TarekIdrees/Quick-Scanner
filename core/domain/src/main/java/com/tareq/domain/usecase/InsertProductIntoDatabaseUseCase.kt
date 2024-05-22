@@ -7,5 +7,6 @@ import javax.inject.Inject
 class InsertProductIntoDatabaseUseCase @Inject constructor(
     private val scannerRepository: ScannerRepository
 ) {
-    suspend operator fun invoke(product: Product) = scannerRepository.insertProduct(product)
+    suspend operator fun invoke(product: Product, scanDate: String) =
+        scannerRepository.insertProductIntoDatabase(product, scanDate)
 }

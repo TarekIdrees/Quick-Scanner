@@ -38,12 +38,14 @@ fun ProductCard(
     ingredients: String,
     size: String,
     scanDate: String,
+    isProductArchived: Boolean,
     onClickBackArrow: () -> Unit,
     onClickArchive: () -> Unit
 ) {
     val pagerState = rememberPagerState(pageCount = { images.size })
     BaseCard(
         modifier = modifier,
+        isItemArchived = isProductArchived,
         onClickBackArrow = onClickBackArrow,
         onClickArchive = onClickArchive
     ) {
@@ -107,6 +109,7 @@ fun ProductCardPreview() {
             ingredients = "Sucre, Crème , Cafe Solube, Sei, Maltodextrin.",
             size = "21 x 16g",
             scanDate = "1-5-2024",
+            isProductArchived = false,
             onClickBackArrow = { },
             onClickArchive = {}
         )

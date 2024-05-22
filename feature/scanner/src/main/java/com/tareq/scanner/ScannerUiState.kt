@@ -4,6 +4,7 @@ import androidx.annotation.StringRes
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
 import com.tareq.model.Product
+import com.tareq.model.Wifi
 import com.tareq.model.local.ScanItem
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
@@ -28,6 +29,13 @@ data class WifiFields(
     val ssid: String = "",
     val password: String = "",
     val encryptionType: String = "",
+    val isArchived: Boolean = false,
+)
+
+fun WifiFields.toWifi() = Wifi(
+    ssid = ssid,
+    password = password,
+    encryptionType = encryptionType
 )
 
 @Immutable
@@ -58,7 +66,8 @@ data class ProductFields(
     val category: String = "",
     val images: ImmutableList<String> = persistentListOf(),
     val ingredients: String = "",
-    val size: String = ""
+    val size: String = "",
+    val isArchived: Boolean = false,
 )
 
 fun ProductFields.toProduct() = Product(

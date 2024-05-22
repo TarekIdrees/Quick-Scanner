@@ -31,6 +31,7 @@ internal fun BaseCard(
     modifier: Modifier = Modifier,
     onClickBackArrow: () -> Unit,
     onClickArchive: () -> Unit,
+    isItemArchived: Boolean,
     content: @Composable ColumnScope.() -> Unit
 ) {
     Column(
@@ -60,13 +61,22 @@ internal fun BaseCard(
                 )
             }
             IconButton(
-                colors = IconButtonDefaults.iconButtonColors(containerColor = MaterialTheme.colorScheme.background),
+                colors = IconButtonDefaults.iconButtonColors(
+                    containerColor =
+                    if (isItemArchived)
+                        MaterialTheme.colorScheme.primary
+                    else
+                        MaterialTheme.colorScheme.background
+                ),
                 onClick = onClickArchive,
             ) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_bookmark),
                     contentDescription = "archive icon",
-                    tint = MaterialTheme.colorScheme.primary,
+                    tint = if (isItemArchived)
+                        MaterialTheme.colorScheme.background
+                    else
+                        MaterialTheme.colorScheme.primary
                 )
             }
         }
@@ -78,7 +88,7 @@ internal fun BaseCard(
 @Composable
 private fun BaseCardPreview() {
     BarcodeScannerTheme {
-        BaseCard(onClickBackArrow = { }, onClickArchive = { }) {
+        BaseCard(isItemArchived = false, onClickBackArrow = { }, onClickArchive = { }) {
 
         }
     }

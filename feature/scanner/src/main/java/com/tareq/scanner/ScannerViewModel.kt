@@ -11,7 +11,10 @@ import com.tareq.domain.usecase.GetProductByBarcodeUseCase
 import com.tareq.domain.usecase.GetScanItemsUseCase
 import com.tareq.core.design.system.R
 import com.tareq.domain.DatabaseOperation
+import com.tareq.domain.usecase.DeleteProductFromDatabaseUseCase
+import com.tareq.domain.usecase.DeleteWifiFromDatabaseUseCase
 import com.tareq.domain.usecase.InsertProductIntoDatabaseUseCase
+import com.tareq.domain.usecase.InsertWifiIntoDatabaseUseCase
 import com.tareq.model.Product
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.toImmutableList
@@ -31,7 +34,10 @@ class ScannerViewModel @Inject constructor(
     private val scanner: GmsBarcodeScanner,
     private val getScanItemsUseCase: GetScanItemsUseCase,
     private val getProductByBarcodeUseCase: GetProductByBarcodeUseCase,
-    private val insertProductIntoDatabaseUseCase: InsertProductIntoDatabaseUseCase
+    private val insertProductIntoDatabaseUseCase: InsertProductIntoDatabaseUseCase,
+    private val deleteProductFromDatabaseUseCase: DeleteProductFromDatabaseUseCase,
+    private val insertWifiIntoDatabaseUseCase: InsertWifiIntoDatabaseUseCase,
+    private val deleteWifiFromDatabaseUseCase: DeleteWifiFromDatabaseUseCase
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(ScannerUiState())
@@ -109,18 +115,88 @@ class ScannerViewModel @Inject constructor(
     fun onClickArchive() {
         when (uiState.value.scanItemCategory) {
             ScanItemCategory.EMPTY -> {}
-            ScanItemCategory.WIFI -> {}
+            ScanItemCategory.WIFI -> {
+                if (uiState.value.wifiFields.isArchived)
+                    deleteWifiFromDatabase(uiState.value.wifiFields.ssid)
+                else
+                    insertWifiIntoDatabase(
+                        uiState.value.wifiFields,
+                        scanDate = uiState.value.scanDate
+                    )
+            }
+
             ScanItemCategory.EMAIL -> {}
-            ScanItemCategory.PRODUCT -> insertProductIntoDatabase(uiState.value.productFields)
+            ScanItemCategory.PRODUCT -> {
+                if (uiState.value.productFields.isArchived)
+                    deleteProductFromDatabase(productBarcode = uiState.value.productFields.barcode)
+                else
+                    insertProductIntoDatabase(uiState.value.productFields, uiState.value.scanDate)
+            }
+
             ScanItemCategory.CONTACT_INFO -> {}
         }
     }
 
-    private fun insertProductIntoDatabase(productFields: ProductFields) {
-        viewModelScope.launch(Dispatchers.IO) {
-            when (insertProductIntoDatabaseUseCase(productFields.toProduct())) {
+    private fun insertWifiIntoDatabase(wifiFields: WifiFields, scanDate: String) {
+        viewModelScope.launch {
+            when (insertWifiIntoDatabaseUseCase(wifiFields.toWifi(), scanDate)) {
                 is DatabaseOperation.InComplete -> showToastMessage(R.string.item_archive_failed)
-                DatabaseOperation.Complete -> showToastMessage(R.string.item_archive_success)
+                DatabaseOperation.Complete -> {
+                    _uiState.update {
+                        it.copy(
+                            wifiFields = it.wifiFields.copy(isArchived = !uiState.value.wifiFields.isArchived)
+                        )
+                    }
+                    showToastMessage(R.string.item_archive_success)
+                }
+            }
+        }
+    }
+
+    private fun deleteWifiFromDatabase(ssid: String) {
+        viewModelScope.launch {
+            when (deleteWifiFromDatabaseUseCase(ssid)) {
+                is DatabaseOperation.InComplete -> showToastMessage(R.string.item_unarchive_failed)
+                DatabaseOperation.Complete -> {
+                    _uiState.update {
+                        it.copy(
+                            wifiFields = it.wifiFields.copy(isArchived = !uiState.value.wifiFields.isArchived)
+                        )
+                    }
+                    showToastMessage(R.string.item_unarchive_success)
+                }
+            }
+        }
+    }
+
+    private fun deleteProductFromDatabase(productBarcode: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            when (deleteProductFromDatabaseUseCase(productId = productBarcode)) {
+                is DatabaseOperation.InComplete -> showToastMessage(R.string.item_unarchive_failed)
+                DatabaseOperation.Complete -> {
+                    _uiState.update {
+                        it.copy(
+                            productFields = it.productFields.copy(isArchived = !uiState.value.productFields.isArchived)
+                        )
+                    }
+                    showToastMessage(R.string.item_unarchive_success)
+                }
+            }
+        }
+    }
+
+    private fun insertProductIntoDatabase(productFields: ProductFields, scanDate: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            when (insertProductIntoDatabaseUseCase(productFields.toProduct(), scanDate)) {
+                is DatabaseOperation.InComplete -> showToastMessage(R.string.item_archive_failed)
+                DatabaseOperation.Complete -> {
+                    _uiState.update {
+                        it.copy(
+                            productFields = it.productFields.copy(isArchived = !uiState.value.productFields.isArchived)
+                        )
+                    }
+                    showToastMessage(R.string.item_archive_success)
+                }
             }
         }
     }
@@ -131,13 +207,13 @@ class ScannerViewModel @Inject constructor(
         _uiState.update { it.copy(isLoading = true) }
         barcode.displayValue?.let { barcodeNumber ->
             viewModelScope.launch(Dispatchers.IO) {
-                when (val product = getProductByBarcodeUseCase(barcodeNumber)) {
+                when (val productResult = getProductByBarcodeUseCase(barcodeNumber)) {
                     is Result.Error -> {
-                        handelErrorState(product.error)
+                        handelErrorState(productResult.error)
                     }
 
                     is Result.Success -> {
-                        updateProductFields(product.value)
+                        updateProductFields(productResult.value)
                     }
                 }
             }

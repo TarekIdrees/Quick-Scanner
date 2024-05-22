@@ -33,6 +33,7 @@ internal fun ContactCard(
     BaseCard(
         modifier = modifier,
         onClickBackArrow = onClickBackArrow,
+        isItemArchived = false,
         onClickArchive = onClickArchive
     ) {
         Icon(

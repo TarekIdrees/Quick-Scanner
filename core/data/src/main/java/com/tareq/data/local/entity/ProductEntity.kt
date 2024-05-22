@@ -13,7 +13,8 @@ data class ProductEntity(
     val category: String,
     val images: List<String>,
     val ingredients: String,
-    val size: String
+    val size: String,
+    val scanDate: String
 ) {
     @PrimaryKey(autoGenerate = true)
     var id: Int = 0

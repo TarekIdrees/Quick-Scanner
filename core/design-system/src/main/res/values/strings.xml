@@ -47,5 +47,8 @@
 
     <string name="item_archive_success">The item has been archived successfully</string>
     <string name="item_archive_failed">The item has not been archived according to an error.Please try again</string>
+    <string name="item_unarchive_success">The item has been unarchived successfully</string>
+    <string name="item_unarchive_failed">The item has not been unarchived according to an error.Please try again</string>
+
 
 </resources>

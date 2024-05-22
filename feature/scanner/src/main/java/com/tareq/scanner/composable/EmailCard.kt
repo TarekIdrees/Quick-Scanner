@@ -24,6 +24,7 @@ internal fun EmailCard(
 ) {
     BaseCard(
         modifier = modifier,
+        isItemArchived = false,
         onClickBackArrow = onClickBackArrow,
         onClickArchive = onClickArchive
     ) {

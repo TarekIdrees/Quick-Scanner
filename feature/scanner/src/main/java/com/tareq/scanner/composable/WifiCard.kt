@@ -19,11 +19,13 @@ internal fun WifiCard(
     ssid: String,
     encryptionType: String,
     scanDate: String,
+    isWifiArchived: Boolean,
     onClickBackArrow: () -> Unit,
     onClickArchive: () -> Unit
 ) {
     BaseCard(
         modifier = modifier,
+        isItemArchived = isWifiArchived,
         onClickBackArrow = onClickBackArrow,
         onClickArchive = onClickArchive
     ) {
@@ -51,6 +53,7 @@ private fun WifiCardPreview() {
             ssid = "test",
             encryptionType = "WPA",
             scanDate = "15-1-2024",
+            isWifiArchived = false,
             onClickBackArrow = {},
             onClickArchive = {})
     }

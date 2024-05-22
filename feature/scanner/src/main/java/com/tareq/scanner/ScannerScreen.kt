@@ -162,7 +162,8 @@ internal fun ScannerContent(
             ssid = wifiFields.ssid,
             encryptionType = wifiFields.encryptionType,
             scanDate = scanDate,
-            onClickArchive = {},
+            isWifiArchived = wifiFields.isArchived,
+            onClickArchive = onClickArchive,
             onClickBackArrow = onClickBackArrow
         )
     }
@@ -202,6 +203,7 @@ internal fun ScannerContent(
             ingredients = productFields.ingredients,
             size = productFields.size,
             scanDate = scanDate,
+            isProductArchived = productFields.isArchived,
             onClickBackArrow = onClickBackArrow,
             onClickArchive = onClickArchive,
         )

@@ -37,4 +37,12 @@ object DatabaseModule {
     @Provides
     @Singleton
     fun provideWifiDao(database: QrBrCodeDatabase) = database.getWifiDao()
+
+    @Provides
+    @Singleton
+    fun provideContactDao(database: QrBrCodeDatabase) = database.getContactDao()
+
+    @Provides
+    @Singleton
+    fun provideEmailDao(database: QrBrCodeDatabase) = database.getEmailDao()
 }

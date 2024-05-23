@@ -1,6 +1,7 @@
 package com.tareq.scanner
 
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.mlkit.vision.barcode.common.Barcode
@@ -11,8 +12,12 @@ import com.tareq.domain.usecase.GetProductByBarcodeUseCase
 import com.tareq.domain.usecase.GetScanItemsUseCase
 import com.tareq.core.design.system.R
 import com.tareq.domain.DatabaseOperation
+import com.tareq.domain.usecase.DeleteContactFromDatabaseUseCase
+import com.tareq.domain.usecase.DeleteEmailFromDatabaseUseCase
 import com.tareq.domain.usecase.DeleteProductFromDatabaseUseCase
 import com.tareq.domain.usecase.DeleteWifiFromDatabaseUseCase
+import com.tareq.domain.usecase.InsertContactIntoDatabaseUseCase
+import com.tareq.domain.usecase.InsertEmailIntoDatabaseUseCase
 import com.tareq.domain.usecase.InsertProductIntoDatabaseUseCase
 import com.tareq.domain.usecase.InsertWifiIntoDatabaseUseCase
 import com.tareq.model.Product
@@ -37,7 +42,11 @@ class ScannerViewModel @Inject constructor(
     private val insertProductIntoDatabaseUseCase: InsertProductIntoDatabaseUseCase,
     private val deleteProductFromDatabaseUseCase: DeleteProductFromDatabaseUseCase,
     private val insertWifiIntoDatabaseUseCase: InsertWifiIntoDatabaseUseCase,
-    private val deleteWifiFromDatabaseUseCase: DeleteWifiFromDatabaseUseCase
+    private val deleteWifiFromDatabaseUseCase: DeleteWifiFromDatabaseUseCase,
+    private val insertContactIntoDatabaseUseCase: InsertContactIntoDatabaseUseCase,
+    private val deleteContactFromDatabaseUseCase: DeleteContactFromDatabaseUseCase,
+    private val deleteEmailFromDatabaseUseCase: DeleteEmailFromDatabaseUseCase,
+    private val insertEmailIntoDatabaseUseCase: InsertEmailIntoDatabaseUseCase,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(ScannerUiState())
@@ -99,12 +108,12 @@ class ScannerViewModel @Inject constructor(
                 }
                 .addOnFailureListener {
                     _uiState.update { it.copy(isLoading = false) }
-                    showToastMessage(R.string.unsupported_QrBr_code)
+                    showToastMessage(R.string.scan_failed)
                 }
             _uiState.update { it.copy(isLoading = false) }
         } catch (e: Exception) {
             _uiState.update { it.copy(isLoading = false) }
-            showToastMessage(R.string.unsupported_QrBr_code)
+            showToastMessage(R.string.scan_failed)
         }
     }
 
@@ -119,13 +128,16 @@ class ScannerViewModel @Inject constructor(
                 if (uiState.value.wifiFields.isArchived)
                     deleteWifiFromDatabase(uiState.value.wifiFields.ssid)
                 else
-                    insertWifiIntoDatabase(
-                        uiState.value.wifiFields,
-                        scanDate = uiState.value.scanDate
-                    )
+                    insertWifiIntoDatabase(uiState.value.wifiFields, uiState.value.scanDate)
             }
 
-            ScanItemCategory.EMAIL -> {}
+            ScanItemCategory.EMAIL -> {
+                if (uiState.value.emailFields.isArchived)
+                    deleteEmailFromDatabase(uiState.value.emailFields.email)
+                else
+                    insertEmailIntoDatabase(uiState.value.emailFields, uiState.value.scanDate)
+            }
+
             ScanItemCategory.PRODUCT -> {
                 if (uiState.value.productFields.isArchived)
                     deleteProductFromDatabase(productBarcode = uiState.value.productFields.barcode)
@@ -133,7 +145,76 @@ class ScannerViewModel @Inject constructor(
                     insertProductIntoDatabase(uiState.value.productFields, uiState.value.scanDate)
             }
 
-            ScanItemCategory.CONTACT_INFO -> {}
+            ScanItemCategory.CONTACT_INFO -> {
+                if (uiState.value.contactFields.isArchived)
+                    deleteContactFromDatabase(contactName = uiState.value.contactFields.name)
+                else
+                    insertContactIntoDatabase(uiState.value.contactFields, uiState.value.scanDate)
+            }
+        }
+    }
+
+    private fun insertEmailIntoDatabase(email: EmailFields, scanDate: String) {
+        viewModelScope.launch {
+            when (insertEmailIntoDatabaseUseCase(email.toEmail(), scanDate)) {
+                is DatabaseOperation.InComplete -> showToastMessage(R.string.item_archive_failed)
+                DatabaseOperation.Complete -> {
+                    _uiState.update {
+                        it.copy(
+                            emailFields = it.emailFields.copy(isArchived = !uiState.value.emailFields.isArchived)
+                        )
+                    }
+                    showToastMessage(R.string.item_archive_success)
+                }
+            }
+        }
+    }
+
+    private fun deleteEmailFromDatabase(email: String) {
+        viewModelScope.launch {
+            when (deleteEmailFromDatabaseUseCase(email)) {
+                is DatabaseOperation.InComplete -> showToastMessage(R.string.item_unarchive_failed)
+                DatabaseOperation.Complete -> {
+                    _uiState.update {
+                        it.copy(
+                            emailFields = it.emailFields.copy(isArchived = !uiState.value.emailFields.isArchived)
+                        )
+                    }
+                    showToastMessage(R.string.item_unarchive_success)
+                }
+            }
+        }
+    }
+
+    private fun insertContactIntoDatabase(contactFields: ContactFields, scanDate: String) {
+        viewModelScope.launch {
+            when (insertContactIntoDatabaseUseCase(contactFields.toContact(), scanDate)) {
+                is DatabaseOperation.InComplete -> showToastMessage(R.string.item_archive_failed)
+                DatabaseOperation.Complete -> {
+                    _uiState.update {
+                        it.copy(
+                            contactFields = it.contactFields.copy(isArchived = !uiState.value.contactFields.isArchived)
+                        )
+                    }
+                    showToastMessage(R.string.item_archive_success)
+                }
+            }
+        }
+    }
+
+    private fun deleteContactFromDatabase(contactName: String) {
+        viewModelScope.launch {
+            when (deleteContactFromDatabaseUseCase(name = contactName)) {
+                is DatabaseOperation.InComplete -> showToastMessage(R.string.item_unarchive_failed)
+                DatabaseOperation.Complete -> {
+                    _uiState.update {
+                        it.copy(
+                            contactFields = it.contactFields.copy(isArchived = !uiState.value.contactFields.isArchived)
+                        )
+                    }
+                    showToastMessage(R.string.item_unarchive_success)
+                }
+            }
         }
     }
 
@@ -200,7 +281,7 @@ class ScannerViewModel @Inject constructor(
             }
         }
     }
-    //endregion
+//endregion
 
     //region retrieve data
     private fun getProductByBarcode(barcode: Barcode) {
@@ -232,7 +313,7 @@ class ScannerViewModel @Inject constructor(
         }
     }
 
-    //endregion
+//endregion
 
     // region update scan items
     private fun updateProductFields(product: Product) {
@@ -322,7 +403,7 @@ class ScannerViewModel @Inject constructor(
         } ?: showToastMessage(R.string.unsupported_QrBr_code)
     }
 
-    //endregion
+//endregion
 
     //region helper function
     private fun executeBrowserLinkBarcode(barcode: Barcode) {
@@ -345,7 +426,7 @@ class ScannerViewModel @Inject constructor(
         }
     }
 
-    //endregion
+//endregion
 
 
 }

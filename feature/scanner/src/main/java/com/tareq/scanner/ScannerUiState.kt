@@ -3,6 +3,8 @@ package com.tareq.scanner
 import androidx.annotation.StringRes
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
+import com.tareq.model.Contact
+import com.tareq.model.Email
 import com.tareq.model.Product
 import com.tareq.model.Wifi
 import com.tareq.model.local.ScanItem
@@ -47,6 +49,17 @@ data class ContactFields(
     val addresses: ImmutableList<String> = persistentListOf(),
     val urls: ImmutableList<String> = persistentListOf(),
     val organization: String = "",
+    val isArchived: Boolean = false
+)
+
+fun ContactFields.toContact() = Contact(
+    name = name,
+    title = title,
+    phoneNumbers = phoneNumbers,
+    emails = emails,
+    addresses = addresses,
+    urls = urls,
+    organization = organization
 )
 
 @Immutable
@@ -54,6 +67,13 @@ data class EmailFields(
     val email: String = "",
     val subject: String = "",
     val body: String = "",
+    val isArchived: Boolean = false
+)
+
+fun EmailFields.toEmail() = Email(
+    email = email,
+    subject = subject,
+    body = body
 )
 
 @Immutable

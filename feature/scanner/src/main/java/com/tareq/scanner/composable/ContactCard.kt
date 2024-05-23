@@ -27,13 +27,14 @@ internal fun ContactCard(
     organization: String,
     urls: ImmutableList<String>,
     scanDate: String,
+    isContactArchived: Boolean,
     onClickBackArrow: () -> Unit,
     onClickArchive: () -> Unit
 ) {
     BaseCard(
         modifier = modifier,
         onClickBackArrow = onClickBackArrow,
-        isItemArchived = false,
+        isItemArchived = isContactArchived,
         onClickArchive = onClickArchive
     ) {
         Icon(
@@ -68,6 +69,7 @@ private fun ContactCardPreview() {
             organization = "Google",
             urls = persistentListOf("www.google.com", "www.facebook.com"),
             scanDate = "1-5-2024",
+            isContactArchived = false,
             onClickBackArrow = {},
             onClickArchive = {}
         )

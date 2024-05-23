@@ -50,5 +50,7 @@
     <string name="item_unarchive_success">The item has been unarchived successfully</string>
     <string name="item_unarchive_failed">The item has not been unarchived according to an error.Please try again</string>
 
+    <string name="scan_failed">Scan failed. Please check that you have downloaded the latest version of the Google Play Service and then try again.</string>
+
 
 </resources>

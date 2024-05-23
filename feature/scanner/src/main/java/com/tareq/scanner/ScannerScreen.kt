@@ -177,8 +177,9 @@ internal fun ScannerContent(
             organization = contactFields.organization,
             urls = contactFields.urls,
             scanDate = scanDate,
+            isContactArchived = contactFields.isArchived,
             onClickBackArrow = onClickBackArrow,
-            onClickArchive = {},
+            onClickArchive = onClickArchive,
         )
     }
     ContentVisibilityAnimation(state = scanItemCategory == ScanItemCategory.EMAIL) {
@@ -187,8 +188,9 @@ internal fun ScannerContent(
             body = emailFields.body,
             subject = emailFields.subject,
             scanDate = scanDate,
+            isEmailArchived = emailFields.isArchived,
             onClickBackArrow = onClickBackArrow,
-            onClickArchive = {},
+            onClickArchive = onClickArchive,
         )
     }
     ContentVisibilityAnimation(state = scanItemCategory == ScanItemCategory.PRODUCT) {

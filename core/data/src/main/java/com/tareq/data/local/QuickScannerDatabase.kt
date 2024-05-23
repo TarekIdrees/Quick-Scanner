@@ -17,7 +17,7 @@ import com.tareq.data.local.entity.WifiEntity
     version = 1
 )
 @TypeConverters(Convertors::class)
-abstract class QrBrCodeDatabase : RoomDatabase() {
+abstract class QuickScannerDatabase : RoomDatabase() {
     abstract fun getProductDao(): ProductDao
     abstract fun getWifiDao(): WifiDao
     abstract fun getContactDao(): ContactDao

@@ -2,7 +2,7 @@ package com.tareq.barcodescanner.di
 
 import android.content.Context
 import androidx.room.Room
-import com.tareq.data.local.QrBrCodeDatabase
+import com.tareq.data.local.QuickScannerDatabase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -19,30 +19,30 @@ object DatabaseModule {
     fun provideDatabase(
         @ApplicationContext context: Context,
         @Named("databaseName") databaseName: String
-    ): QrBrCodeDatabase {
+    ): QuickScannerDatabase {
         return Room
-            .databaseBuilder(context, QrBrCodeDatabase::class.java, databaseName)
+            .databaseBuilder(context, QuickScannerDatabase::class.java, databaseName)
             .build()
     }
 
     @Singleton
     @Provides
     @Named("databaseName")
-    fun provideDataBaseName(): String = "qr_br_code_db"
+    fun provideDataBaseName(): String = "quick_scanner_db"
 
     @Provides
     @Singleton
-    fun provideProductDao(database: QrBrCodeDatabase) = database.getProductDao()
+    fun provideProductDao(database: QuickScannerDatabase) = database.getProductDao()
 
     @Provides
     @Singleton
-    fun provideWifiDao(database: QrBrCodeDatabase) = database.getWifiDao()
+    fun provideWifiDao(database: QuickScannerDatabase) = database.getWifiDao()
 
     @Provides
     @Singleton
-    fun provideContactDao(database: QrBrCodeDatabase) = database.getContactDao()
+    fun provideContactDao(database: QuickScannerDatabase) = database.getContactDao()
 
     @Provides
     @Singleton
-    fun provideEmailDao(database: QrBrCodeDatabase) = database.getEmailDao()
+    fun provideEmailDao(database: QuickScannerDatabase) = database.getEmailDao()
 }

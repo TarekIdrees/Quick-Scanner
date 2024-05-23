@@ -1,7 +1,6 @@
 package com.tareq.scanner
 
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.mlkit.vision.barcode.common.Barcode
@@ -125,163 +124,149 @@ class ScannerViewModel @Inject constructor(
         when (uiState.value.scanItemCategory) {
             ScanItemCategory.EMPTY -> {}
             ScanItemCategory.WIFI -> {
-                if (uiState.value.wifiFields.isArchived)
-                    deleteWifiFromDatabase(uiState.value.wifiFields.ssid)
-                else
-                    insertWifiIntoDatabase(uiState.value.wifiFields, uiState.value.scanDate)
+                handleArchive(
+                    isArchived = uiState.value.wifiFields.isArchived,
+                    deleteAction = { deleteWifiFromDatabase(uiState.value.wifiFields.ssid) },
+                    insertAction = {
+                        insertWifiIntoDatabase(
+                            uiState.value.wifiFields,
+                            uiState.value.scanDate
+                        )
+                    }
+                )
             }
 
             ScanItemCategory.EMAIL -> {
-                if (uiState.value.emailFields.isArchived)
-                    deleteEmailFromDatabase(uiState.value.emailFields.email)
-                else
-                    insertEmailIntoDatabase(uiState.value.emailFields, uiState.value.scanDate)
+                handleArchive(
+                    isArchived = uiState.value.emailFields.isArchived,
+                    deleteAction = { deleteEmailFromDatabase(uiState.value.emailFields.email) },
+                    insertAction = {
+                        insertEmailIntoDatabase(
+                            uiState.value.emailFields,
+                            uiState.value.scanDate
+                        )
+                    }
+                )
             }
 
             ScanItemCategory.PRODUCT -> {
-                if (uiState.value.productFields.isArchived)
-                    deleteProductFromDatabase(productBarcode = uiState.value.productFields.barcode)
-                else
-                    insertProductIntoDatabase(uiState.value.productFields, uiState.value.scanDate)
+                handleArchive(
+                    isArchived = uiState.value.productFields.isArchived,
+                    deleteAction = { deleteProductFromDatabase(uiState.value.productFields.barcode) },
+                    insertAction = {
+                        insertProductIntoDatabase(
+                            uiState.value.productFields,
+                            uiState.value.scanDate
+                        )
+                    }
+                )
             }
 
             ScanItemCategory.CONTACT_INFO -> {
-                if (uiState.value.contactFields.isArchived)
-                    deleteContactFromDatabase(contactName = uiState.value.contactFields.name)
-                else
-                    insertContactIntoDatabase(uiState.value.contactFields, uiState.value.scanDate)
+                handleArchive(
+                    isArchived = uiState.value.contactFields.isArchived,
+                    deleteAction = { deleteContactFromDatabase(uiState.value.contactFields.name) },
+                    insertAction = {
+                        insertContactIntoDatabase(
+                            uiState.value.contactFields,
+                            uiState.value.scanDate
+                        )
+                    }
+                )
             }
         }
     }
 
     private fun insertEmailIntoDatabase(email: EmailFields, scanDate: String) {
-        viewModelScope.launch {
-            when (insertEmailIntoDatabaseUseCase(email.toEmail(), scanDate)) {
-                is DatabaseOperation.InComplete -> showToastMessage(R.string.item_archive_failed)
-                DatabaseOperation.Complete -> {
-                    _uiState.update {
-                        it.copy(
-                            emailFields = it.emailFields.copy(isArchived = !uiState.value.emailFields.isArchived)
-                        )
-                    }
-                    showToastMessage(R.string.item_archive_success)
-                }
-            }
-        }
+        performDatabaseOperation(
+            databaseOperation = { insertEmailIntoDatabaseUseCase(email.toEmail(), scanDate) },
+            updateUiState = { updateEmailFields(!email.isArchived) }
+        )
     }
 
     private fun deleteEmailFromDatabase(email: String) {
-        viewModelScope.launch {
-            when (deleteEmailFromDatabaseUseCase(email)) {
-                is DatabaseOperation.InComplete -> showToastMessage(R.string.item_unarchive_failed)
-                DatabaseOperation.Complete -> {
-                    _uiState.update {
-                        it.copy(
-                            emailFields = it.emailFields.copy(isArchived = !uiState.value.emailFields.isArchived)
-                        )
-                    }
-                    showToastMessage(R.string.item_unarchive_success)
-                }
-            }
+        performDatabaseOperation(
+            databaseOperation = { deleteEmailFromDatabaseUseCase(email) },
+            updateUiState = { updateEmailFields(false) }
+        )
+    }
+
+    private fun updateEmailFields(isArchived: Boolean) {
+        _uiState.update {
+            it.copy(emailFields = it.emailFields.copy(isArchived = isArchived))
         }
     }
 
     private fun insertContactIntoDatabase(contactFields: ContactFields, scanDate: String) {
-        viewModelScope.launch {
-            when (insertContactIntoDatabaseUseCase(contactFields.toContact(), scanDate)) {
-                is DatabaseOperation.InComplete -> showToastMessage(R.string.item_archive_failed)
-                DatabaseOperation.Complete -> {
-                    _uiState.update {
-                        it.copy(
-                            contactFields = it.contactFields.copy(isArchived = !uiState.value.contactFields.isArchived)
-                        )
-                    }
-                    showToastMessage(R.string.item_archive_success)
-                }
-            }
-        }
+        performDatabaseOperation(
+            databaseOperation = {
+                insertContactIntoDatabaseUseCase(
+                    contactFields.toContact(),
+                    scanDate
+                )
+            },
+            updateUiState = { updateContactFields(!contactFields.isArchived) }
+        )
     }
 
     private fun deleteContactFromDatabase(contactName: String) {
-        viewModelScope.launch {
-            when (deleteContactFromDatabaseUseCase(name = contactName)) {
-                is DatabaseOperation.InComplete -> showToastMessage(R.string.item_unarchive_failed)
-                DatabaseOperation.Complete -> {
-                    _uiState.update {
-                        it.copy(
-                            contactFields = it.contactFields.copy(isArchived = !uiState.value.contactFields.isArchived)
-                        )
-                    }
-                    showToastMessage(R.string.item_unarchive_success)
-                }
-            }
-        }
+        performDatabaseOperation(
+            databaseOperation = { deleteContactFromDatabaseUseCase(contactName) },
+            updateUiState = { updateContactFields(false) }
+        )
     }
 
-    private fun insertWifiIntoDatabase(wifiFields: WifiFields, scanDate: String) {
-        viewModelScope.launch {
-            when (insertWifiIntoDatabaseUseCase(wifiFields.toWifi(), scanDate)) {
-                is DatabaseOperation.InComplete -> showToastMessage(R.string.item_archive_failed)
-                DatabaseOperation.Complete -> {
-                    _uiState.update {
-                        it.copy(
-                            wifiFields = it.wifiFields.copy(isArchived = !uiState.value.wifiFields.isArchived)
-                        )
-                    }
-                    showToastMessage(R.string.item_archive_success)
-                }
-            }
+    private fun updateContactFields(isArchived: Boolean) {
+        _uiState.update {
+            it.copy(contactFields = it.contactFields.copy(isArchived = isArchived))
         }
     }
 
     private fun deleteWifiFromDatabase(ssid: String) {
-        viewModelScope.launch {
-            when (deleteWifiFromDatabaseUseCase(ssid)) {
-                is DatabaseOperation.InComplete -> showToastMessage(R.string.item_unarchive_failed)
-                DatabaseOperation.Complete -> {
-                    _uiState.update {
-                        it.copy(
-                            wifiFields = it.wifiFields.copy(isArchived = !uiState.value.wifiFields.isArchived)
-                        )
-                    }
-                    showToastMessage(R.string.item_unarchive_success)
-                }
-            }
+        performDatabaseOperation(
+            databaseOperation = { deleteWifiFromDatabaseUseCase(ssid) },
+            updateUiState = { updateWifiFields(false) }
+        )
+    }
+
+    private fun insertWifiIntoDatabase(wifiFields: WifiFields, scanDate: String) {
+        performDatabaseOperation(
+            databaseOperation = { insertWifiIntoDatabaseUseCase(wifiFields.toWifi(), scanDate) },
+            updateUiState = { updateWifiFields(!wifiFields.isArchived) }
+        )
+    }
+
+    private fun updateWifiFields(isArchived: Boolean) {
+        _uiState.update {
+            it.copy(wifiFields = it.wifiFields.copy(isArchived = isArchived))
         }
     }
 
     private fun deleteProductFromDatabase(productBarcode: String) {
-        viewModelScope.launch(Dispatchers.IO) {
-            when (deleteProductFromDatabaseUseCase(productId = productBarcode)) {
-                is DatabaseOperation.InComplete -> showToastMessage(R.string.item_unarchive_failed)
-                DatabaseOperation.Complete -> {
-                    _uiState.update {
-                        it.copy(
-                            productFields = it.productFields.copy(isArchived = !uiState.value.productFields.isArchived)
-                        )
-                    }
-                    showToastMessage(R.string.item_unarchive_success)
-                }
-            }
-        }
+        performDatabaseOperation(
+            databaseOperation = { deleteProductFromDatabaseUseCase(productBarcode) },
+            updateUiState = { updateProductFields(false) }
+        )
     }
 
     private fun insertProductIntoDatabase(productFields: ProductFields, scanDate: String) {
-        viewModelScope.launch(Dispatchers.IO) {
-            when (insertProductIntoDatabaseUseCase(productFields.toProduct(), scanDate)) {
-                is DatabaseOperation.InComplete -> showToastMessage(R.string.item_archive_failed)
-                DatabaseOperation.Complete -> {
-                    _uiState.update {
-                        it.copy(
-                            productFields = it.productFields.copy(isArchived = !uiState.value.productFields.isArchived)
-                        )
-                    }
-                    showToastMessage(R.string.item_archive_success)
-                }
-            }
+        performDatabaseOperation(
+            databaseOperation = {
+                insertProductIntoDatabaseUseCase(
+                    productFields.toProduct(),
+                    scanDate
+                )
+            },
+            updateUiState = { updateProductFields(!productFields.isArchived) }
+        )
+    }
+
+    private fun updateProductFields(isArchived: Boolean) {
+        _uiState.update {
+            it.copy(productFields = it.productFields.copy(isArchived = isArchived))
         }
     }
-//endregion
+    //endregion
 
     //region retrieve data
     private fun getProductByBarcode(barcode: Barcode) {
@@ -301,19 +286,8 @@ class ScannerViewModel @Inject constructor(
         } ?: showToastMessage(R.string.unsupported_QrBr_code)
     }
 
-    private fun getEncryptionType(encryptionNumber: Int): String {
-        return when (encryptionNumber) {
-            2 -> "TKIP (WPA)"
-            5 -> "WEP"
-            4 -> "CCMP (WPA)"
-            3 -> "AES"
-            7 -> "NONE"
-            8 -> "AUTO"
-            else -> "Unknown"
-        }
-    }
 
-//endregion
+    //endregion
 
     // region update scan items
     private fun updateProductFields(product: Product) {
@@ -419,6 +393,21 @@ class ScannerViewModel @Inject constructor(
         }
     }
 
+    private fun performDatabaseOperation(
+        databaseOperation: suspend () -> DatabaseOperation,
+        updateUiState: () -> Unit
+    ) {
+        viewModelScope.launch {
+            when (databaseOperation()) {
+                is DatabaseOperation.InComplete -> showToastMessage(R.string.item_archive_failed)
+                DatabaseOperation.Complete -> {
+                    updateUiState()
+                    showToastMessage(R.string.item_archive_success)
+                }
+            }
+        }
+    }
+
     private fun showToastMessage(messageFile: Int) {
         _uiState.update { it.copy(errorMessageFile = messageFile, isError = true) }
         viewModelScope.launch {
@@ -426,7 +415,25 @@ class ScannerViewModel @Inject constructor(
         }
     }
 
-//endregion
+    private fun getEncryptionType(encryptionNumber: Int): String {
+        return when (encryptionNumber) {
+            2 -> "TKIP (WPA)"
+            5 -> "WEP"
+            4 -> "CCMP (WPA)"
+            3 -> "AES"
+            7 -> "NONE"
+            8 -> "AUTO"
+            else -> "Unknown"
+        }
+    }
 
+    private fun handleArchive(
+        isArchived: Boolean,
+        deleteAction: () -> Unit,
+        insertAction: () -> Unit
+    ) {
+        if (isArchived) deleteAction() else insertAction()
+    }
 
+    //endregion
 }

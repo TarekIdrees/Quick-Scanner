@@ -19,10 +19,10 @@ fun QuickScanNavHost(modifier: Modifier = Modifier) {
         navController = navController,
         startDestination = BottomBarScreen.Scanner.route,
         enterTransition = {
-            fadeIn(animationSpec = tween(100))
+            fadeIn(animationSpec = tween(300))
         },
         exitTransition = {
-            fadeOut(animationSpec = tween(100))
+            fadeOut(animationSpec = tween(300))
         }
     ) {
         composable(route = BottomBarScreen.Scanner.route) {

@@ -52,5 +52,7 @@
 
     <string name="scan_failed">Scan failed. Please check that you have downloaded the latest version of the Google Play Service and then try again.</string>
 
+    <string name="empty_archive">There is no archived items yet. Scan and archive an item to get started.</string>
+
 
 </resources>

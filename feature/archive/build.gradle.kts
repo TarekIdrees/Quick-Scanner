@@ -35,6 +35,10 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     coreLibraryDesugaring(libs.desugar.jdk.libs)
+
+    //Modules
+    implementation(projects.core.designSystem)
+    
     //Hilt
     implementation(libs.bundles.hilt)
     ksp(libs.hilt.compiler)

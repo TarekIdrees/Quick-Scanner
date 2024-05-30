@@ -51,5 +51,6 @@
     <string name="item_unarchive_failed">لم تتم إزالة العنصر من الأرشيف بسبب حدوث خطأ. يرجى المحاولة مرة أخرى</string>
 
     <string name="scan_failed">فشل المسح. يرجى التحقق من أنك قمت بتنزيل أحدث إصدار من  Google Play Service ثم حاول مرة أخرى.</string>
+    <string name="empty_archive">لا يوجد أي عنصر مؤرشف حتى الآن. قم بمسح أحد العناصر ضوئيًا وأرشفته للبدء.</string>
 
 </resources>

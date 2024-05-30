@@ -109,7 +109,6 @@ class ScannerViewModel @Inject constructor(
                     _uiState.update { it.copy(isLoading = false) }
                     showToastMessage(R.string.scan_failed)
                 }
-            _uiState.update { it.copy(isLoading = false) }
         } catch (e: Exception) {
             _uiState.update { it.copy(isLoading = false) }
             showToastMessage(R.string.scan_failed)
@@ -176,7 +175,24 @@ class ScannerViewModel @Inject constructor(
             }
         }
     }
+    //endregion
 
+    //region email
+    private fun updateEmailFields(barcode: Barcode) {
+        barcode.email?.let { email ->
+            _uiState.update {
+                it.copy(
+                    scanItemCategory = ScanItemCategory.EMAIL,
+                    emailFields = EmailFields(
+                        body = email.body.toString(),
+                        subject = email.subject.toString(),
+                        email = email.address.toString()
+                    ),
+                    isLoading = false,
+                )
+            }
+        } ?: showToastMessage(R.string.unsupported_QrBr_code)
+    }
     private fun insertEmailIntoDatabase(email: EmailFields, scanDate: String) {
         performDatabaseOperation(
             databaseOperation = { insertEmailIntoDatabaseUseCase(email.toEmail(), scanDate) },
@@ -196,7 +212,32 @@ class ScannerViewModel @Inject constructor(
             it.copy(emailFields = it.emailFields.copy(isArchived = isArchived))
         }
     }
+    //endregion
 
+    //region contact
+    private fun updateContactFields(barcode: Barcode) {
+        barcode.contactInfo?.let { contactInfo ->
+            _uiState.update {
+                it.copy(
+                    scanItemCategory = ScanItemCategory.CONTACT_INFO,
+                    contactFields = ContactFields(
+                        name = contactInfo.name?.formattedName ?: "",
+                        title = contactInfo.title ?: "",
+                        phoneNumbers = contactInfo.phones.mapNotNull { phone -> phone.number }
+                            .toImmutableList(),
+                        emails = contactInfo.emails.mapNotNull { email -> email.address }
+                            .toImmutableList(),
+                        addresses = contactInfo.addresses.mapNotNull { address ->
+                            address.addressLines.joinToString(", ")
+                        }.toImmutableList(),
+                        organization = contactInfo.organization ?: "",
+                        urls = contactInfo.urls.mapNotNull { url -> url }.toImmutableList()
+                    ),
+                    isLoading = false,
+                )
+            }
+        } ?: showToastMessage(R.string.unsupported_QrBr_code)
+    }
     private fun insertContactIntoDatabase(contactFields: ContactFields, scanDate: String) {
         performDatabaseOperation(
             databaseOperation = {
@@ -221,7 +262,9 @@ class ScannerViewModel @Inject constructor(
             it.copy(contactFields = it.contactFields.copy(isArchived = isArchived))
         }
     }
+    //endregion
 
+    // region wifi
     private fun deleteWifiFromDatabase(ssid: String) {
         performDatabaseOperation(
             databaseOperation = { deleteWifiFromDatabaseUseCase(ssid) },
@@ -235,40 +278,29 @@ class ScannerViewModel @Inject constructor(
             updateUiState = { updateWifiFields(!wifiFields.isArchived) }
         )
     }
-
+    private fun updateWifiFields(barcode: Barcode) {
+        barcode.wifi?.let { wifi ->
+            _uiState.update {
+                it.copy(
+                    scanItemCategory = ScanItemCategory.WIFI,
+                    wifiFields = WifiFields(
+                        ssid = wifi.ssid.toString(),
+                        password = wifi.password.toString(),
+                        encryptionType = getEncryptionType(wifi.encryptionType)
+                    ),
+                    isLoading = false,
+                )
+            }
+        } ?: showToastMessage(R.string.unsupported_QrBr_code)
+    }
     private fun updateWifiFields(isArchived: Boolean) {
         _uiState.update {
             it.copy(wifiFields = it.wifiFields.copy(isArchived = isArchived))
         }
     }
-
-    private fun deleteProductFromDatabase(productBarcode: String) {
-        performDatabaseOperation(
-            databaseOperation = { deleteProductFromDatabaseUseCase(productBarcode) },
-            updateUiState = { updateProductFields(false) }
-        )
-    }
-
-    private fun insertProductIntoDatabase(productFields: ProductFields, scanDate: String) {
-        performDatabaseOperation(
-            databaseOperation = {
-                insertProductIntoDatabaseUseCase(
-                    productFields.toProduct(),
-                    scanDate
-                )
-            },
-            updateUiState = { updateProductFields(!productFields.isArchived) }
-        )
-    }
-
-    private fun updateProductFields(isArchived: Boolean) {
-        _uiState.update {
-            it.copy(productFields = it.productFields.copy(isArchived = isArchived))
-        }
-    }
     //endregion
 
-    //region retrieve data
+    //region product
     private fun getProductByBarcode(barcode: Barcode) {
         _uiState.update { it.copy(isLoading = true) }
         barcode.displayValue?.let { barcodeNumber ->
@@ -285,11 +317,24 @@ class ScannerViewModel @Inject constructor(
             }
         } ?: showToastMessage(R.string.unsupported_QrBr_code)
     }
+    private fun deleteProductFromDatabase(productBarcode: String) {
+        performDatabaseOperation(
+            databaseOperation = { deleteProductFromDatabaseUseCase(productBarcode) },
+            updateUiState = { updateProductArchiveState(false) }
+        )
+    }
 
-
-    //endregion
-
-    // region update scan items
+    private fun insertProductIntoDatabase(productFields: ProductFields, scanDate: String) {
+        performDatabaseOperation(
+            databaseOperation = {
+                insertProductIntoDatabaseUseCase(
+                    productFields.toProduct(),
+                    scanDate
+                )
+            },
+            updateUiState = { updateProductArchiveState(!productFields.isArchived) }
+        )
+    }
     private fun updateProductFields(product: Product) {
         _uiState.update {
             it.copy(
@@ -309,75 +354,12 @@ class ScannerViewModel @Inject constructor(
             )
         }
     }
-
-    private fun updateEmailFields(barcode: Barcode) {
-        barcode.email?.let { email ->
-            _uiState.update {
-                it.copy(
-                    scanItemCategory = ScanItemCategory.EMAIL,
-                    emailFields = EmailFields(
-                        body = email.body.toString(),
-                        subject = email.subject.toString(),
-                        email = email.address.toString()
-                    )
-                )
-            }
-        } ?: showToastMessage(R.string.unsupported_QrBr_code)
-    }
-
-    private fun handelErrorState(error: DataError.Network) {
-        _uiState.update { it.copy(isError = true, isLoading = false) }
-        when (error) {
-            DataError.Network.NO_INTERNET -> showToastMessage(R.string.no_internet_connection)
-            DataError.Network.FORBIDDEN -> showToastMessage(R.string.forbidden)
-            DataError.Network.UNAUTHORIZED -> showToastMessage(R.string.unauthorized)
-            DataError.Network.SERVER_ERROR -> showToastMessage(R.string.server_error)
-            DataError.Network.SERIALIZATION_ERROR -> showToastMessage(R.string.serialization_error)
-            DataError.Network.UNKNOWN -> showToastMessage(R.string.unknown_error)
-            DataError.Network.EXCEED_LIMIT -> showToastMessage(R.string.exceed_limit)
-            DataError.Network.NOT_FOUND -> showToastMessage(R.string.not_found)
+    private fun updateProductArchiveState(isArchived: Boolean) {
+        _uiState.update {
+            it.copy(productFields = it.productFields.copy(isArchived = isArchived))
         }
     }
-
-    private fun updateWifiFields(barcode: Barcode) {
-        barcode.wifi?.let { wifi ->
-            _uiState.update {
-                it.copy(
-                    scanItemCategory = ScanItemCategory.WIFI,
-                    wifiFields = WifiFields(
-                        ssid = wifi.ssid.toString(),
-                        password = wifi.password.toString(),
-                        encryptionType = getEncryptionType(wifi.encryptionType)
-                    )
-                )
-            }
-        } ?: showToastMessage(R.string.unsupported_QrBr_code)
-    }
-
-    private fun updateContactFields(barcode: Barcode) {
-        barcode.contactInfo?.let { contactInfo ->
-            _uiState.update {
-                it.copy(
-                    scanItemCategory = ScanItemCategory.CONTACT_INFO,
-                    contactFields = ContactFields(
-                        name = contactInfo.name?.formattedName ?: "",
-                        title = contactInfo.title ?: "",
-                        phoneNumbers = contactInfo.phones.mapNotNull { phone -> phone.number }
-                            .toImmutableList(),
-                        emails = contactInfo.emails.mapNotNull { email -> email.address }
-                            .toImmutableList(),
-                        addresses = contactInfo.addresses.mapNotNull { address ->
-                            address.addressLines.joinToString(", ")
-                        }.toImmutableList(),
-                        organization = contactInfo.organization ?: "",
-                        urls = contactInfo.urls.mapNotNull { url -> url }.toImmutableList()
-                    )
-                )
-            }
-        } ?: showToastMessage(R.string.unsupported_QrBr_code)
-    }
-
-//endregion
+    //endregion
 
     //region helper function
     private fun executeBrowserLinkBarcode(barcode: Barcode) {
@@ -434,6 +416,18 @@ class ScannerViewModel @Inject constructor(
     ) {
         if (isArchived) deleteAction() else insertAction()
     }
-
+    private fun handelErrorState(error: DataError.Network) {
+        _uiState.update { it.copy(isError = true, isLoading = false) }
+        when (error) {
+            DataError.Network.NO_INTERNET -> showToastMessage(R.string.no_internet_connection)
+            DataError.Network.FORBIDDEN -> showToastMessage(R.string.forbidden)
+            DataError.Network.UNAUTHORIZED -> showToastMessage(R.string.unauthorized)
+            DataError.Network.SERVER_ERROR -> showToastMessage(R.string.server_error)
+            DataError.Network.SERIALIZATION_ERROR -> showToastMessage(R.string.serialization_error)
+            DataError.Network.UNKNOWN -> showToastMessage(R.string.unknown_error)
+            DataError.Network.EXCEED_LIMIT -> showToastMessage(R.string.exceed_limit)
+            DataError.Network.NOT_FOUND -> showToastMessage(R.string.not_found)
+        }
+    }
     //endregion
 }

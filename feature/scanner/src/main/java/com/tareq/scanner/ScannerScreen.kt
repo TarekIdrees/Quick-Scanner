@@ -65,7 +65,7 @@ fun ScannerScreen(
                 is ScannerEffect.ShowToastMessage -> {
                     Toast.makeText(
                         context,
-                        uiState.errorMessageFile,
+                        scannerEffect.message,
                         Toast.LENGTH_SHORT
                     ).show()
                 }

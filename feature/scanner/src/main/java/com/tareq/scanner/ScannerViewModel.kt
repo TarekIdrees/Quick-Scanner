@@ -193,6 +193,7 @@ class ScannerViewModel @Inject constructor(
             }
         } ?: showToastMessage(R.string.unsupported_QrBr_code)
     }
+
     private fun insertEmailIntoDatabase(email: EmailFields, scanDate: String) {
         performDatabaseOperation(
             databaseOperation = { insertEmailIntoDatabaseUseCase(email.toEmail(), scanDate) },
@@ -238,6 +239,7 @@ class ScannerViewModel @Inject constructor(
             }
         } ?: showToastMessage(R.string.unsupported_QrBr_code)
     }
+
     private fun insertContactIntoDatabase(contactFields: ContactFields, scanDate: String) {
         performDatabaseOperation(
             databaseOperation = {
@@ -278,6 +280,7 @@ class ScannerViewModel @Inject constructor(
             updateUiState = { updateWifiFields(!wifiFields.isArchived) }
         )
     }
+
     private fun updateWifiFields(barcode: Barcode) {
         barcode.wifi?.let { wifi ->
             _uiState.update {
@@ -293,6 +296,7 @@ class ScannerViewModel @Inject constructor(
             }
         } ?: showToastMessage(R.string.unsupported_QrBr_code)
     }
+
     private fun updateWifiFields(isArchived: Boolean) {
         _uiState.update {
             it.copy(wifiFields = it.wifiFields.copy(isArchived = isArchived))
@@ -317,6 +321,7 @@ class ScannerViewModel @Inject constructor(
             }
         } ?: showToastMessage(R.string.unsupported_QrBr_code)
     }
+
     private fun deleteProductFromDatabase(productBarcode: String) {
         performDatabaseOperation(
             databaseOperation = { deleteProductFromDatabaseUseCase(productBarcode) },
@@ -335,6 +340,7 @@ class ScannerViewModel @Inject constructor(
             updateUiState = { updateProductArchiveState(!productFields.isArchived) }
         )
     }
+
     private fun updateProductFields(product: Product) {
         _uiState.update {
             it.copy(
@@ -354,6 +360,7 @@ class ScannerViewModel @Inject constructor(
             )
         }
     }
+
     private fun updateProductArchiveState(isArchived: Boolean) {
         _uiState.update {
             it.copy(productFields = it.productFields.copy(isArchived = isArchived))
@@ -391,7 +398,13 @@ class ScannerViewModel @Inject constructor(
     }
 
     private fun showToastMessage(messageFile: Int) {
-        _uiState.update { it.copy(errorMessageFile = messageFile, isError = true) }
+        _uiState.update {
+            it.copy(
+                errorMessageFile = messageFile,
+                isError = true,
+                isLoading = false
+            )
+        }
         viewModelScope.launch {
             _effect.emit(ScannerEffect.ShowToastMessage(messageFile))
         }
@@ -416,6 +429,7 @@ class ScannerViewModel @Inject constructor(
     ) {
         if (isArchived) deleteAction() else insertAction()
     }
+
     private fun handelErrorState(error: DataError.Network) {
         _uiState.update { it.copy(isError = true, isLoading = false) }
         when (error) {

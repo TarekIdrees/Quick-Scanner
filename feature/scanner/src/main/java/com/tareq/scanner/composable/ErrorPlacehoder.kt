@@ -24,14 +24,15 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.tareq.core.design.system.R
+import com.tareq.design_system.components.BarcodeScannerPreview
+import com.tareq.design_system.ui.BarcodeScannerTheme
 
 @Composable
 internal fun ErrorPlaceholder(
     modifier: Modifier = Modifier,
     @StringRes messageFile: Int,
     onClickBackArrow: () -> Unit
-
-){
+) {
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -64,5 +65,15 @@ internal fun ErrorPlaceholder(
             color = MaterialTheme.colorScheme.onSurface,
             textAlign = TextAlign.Center,
         )
+    }
+}
+
+@BarcodeScannerPreview
+@Composable
+private fun ErrorPlaceholderPreview() {
+    BarcodeScannerTheme {
+        ErrorPlaceholder(messageFile = R.string.no_internet_connection) {
+
+        }
     }
 }

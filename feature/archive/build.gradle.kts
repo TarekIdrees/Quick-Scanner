@@ -7,21 +7,21 @@ plugins {
 }
 
 android {
-    namespace = "com.tareq.feature.scanner"
-    kotlinOptions {
-        jvmTarget = "1.8"
+    namespace = "com.tareq.feature.archive"
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
     }
     buildFeatures {
         compose = true
     }
-    compileOptions {
-        isCoreLibraryDesugaringEnabled = true
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+    kotlinOptions {
+        jvmTarget = "1.8"
     }
 }
 
 dependencies {
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.activity.compose)
@@ -35,36 +35,9 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     coreLibraryDesugaring(libs.desugar.jdk.libs)
-    //Modules
-    implementation(projects.core.designSystem)
-    implementation(projects.core.model)
-    implementation(projects.core.domain)
-
     //Hilt
     implementation(libs.bundles.hilt)
     ksp(libs.hilt.compiler)
-
-    //barcode
-    implementation(libs.barcode.scanner)
-
-    //lifecycle
-    implementation(libs.bundles.lifecycle)
-
-
-    //Coroutines
-    implementation(libs.kotlinx.coroutines)
-
-    //lottie
-    implementation(libs.lottie)
-
-    //coil
-    implementation(libs.coil)
-
-    //Immutable collections
-    implementation(libs.kotlinx.immutable.collections)
-
-    //lottie
-    implementation(libs.lottie)
 
     //serialization
     implementation(libs.serilization)

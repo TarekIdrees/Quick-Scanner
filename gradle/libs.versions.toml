@@ -14,7 +14,7 @@ ktor = "2.3.11"
 lifecycleKtx = "2.7.0"
 lifecycleExtensions = "2.2.0"
 coroutines = "1.8.0"
-navigation = "2.7.7"
+navigation = "2.8.0-alpha08"
 ksp = "1.9.23-1.0.20"
 dagger-hilt = "2.51"
 hilt-navigation = "1.2.0"
@@ -32,6 +32,7 @@ lottie = "4.2.0"
 immutable-collection = "0.3.6"
 room-database = "2.6.1"
 gson = "2.10.1"
+material = "1.10.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -93,6 +94,7 @@ kotlinx-immutable-collections = { group = "org.jetbrains.kotlinx", name = "kotli
 room-databse = { group = "androidx.room", name = "room-runtime", version.ref = "room-database" }
 room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room-database" }
 room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room-database" }
+material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 
 [bundles]
 hilt = ["dagger-hilt", "hilt-navigation"]

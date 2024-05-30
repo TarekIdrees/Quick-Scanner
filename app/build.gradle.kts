@@ -6,6 +6,7 @@ plugins {
     alias(libs.plugins.googleServices)
     alias(libs.plugins.firebaseCrashlytics)
     alias(libs.plugins.room)
+    alias(libs.plugins.serilization)
 }
 
 android {
@@ -66,9 +67,10 @@ dependencies {
 
     //Modules
     implementation(projects.core.designSystem)
-    implementation(projects.feature.scanner)
     implementation(projects.core.data)
     implementation(projects.core.domain)
+    implementation(projects.feature.scanner)
+    implementation(projects.feature.archive)
 
     //Hilt
     implementation(libs.bundles.hilt)
@@ -94,4 +96,7 @@ dependencies {
     //Room
     implementation(libs.bundles.room)
     ksp(libs.room.compiler)
+
+    //serialization
+    implementation(libs.serilization)
 }

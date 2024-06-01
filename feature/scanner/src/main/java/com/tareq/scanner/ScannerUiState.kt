@@ -34,10 +34,11 @@ data class WifiFields(
     val isArchived: Boolean = false,
 )
 
-fun WifiFields.toWifi() = Wifi(
+fun WifiFields.toWifi(scanDate: String) = Wifi(
     ssid = ssid,
     password = password,
-    encryptionType = encryptionType
+    encryptionType = encryptionType,
+    scanDate = scanDate
 )
 
 @Immutable

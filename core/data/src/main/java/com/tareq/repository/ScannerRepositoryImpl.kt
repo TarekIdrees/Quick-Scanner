@@ -8,6 +8,7 @@ import com.tareq.data.local.dao.WifiDao
 import com.tareq.data.local.mapper.toContactEntity
 import com.tareq.data.local.mapper.toEmailEntity
 import com.tareq.data.local.mapper.toProductEntity
+import com.tareq.data.local.mapper.toWifi
 import com.tareq.data.local.mapper.toWifiEntity
 import com.tareq.data.remote.ApiCallResult
 import com.tareq.data.remote.ProductApi
@@ -22,6 +23,10 @@ import com.tareq.model.Product
 import com.tareq.model.Wifi
 import com.tareq.model.local.ScanItem
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.onEmpty
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
@@ -59,9 +64,9 @@ class ScannerRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun insertWifiIntoDatabase(wifi: Wifi, scanDate: String): DatabaseOperation {
+    override suspend fun insertWifiIntoDatabase(wifi: Wifi): DatabaseOperation {
         return executeDatabaseOperation {
-            wifiDao.insertWifi(wifi.toWifiEntity(scanDate = scanDate))
+            wifiDao.insertWifi(wifi.toWifiEntity())
         }
     }
 
@@ -98,6 +103,19 @@ class ScannerRepositoryImpl @Inject constructor(
     override suspend fun deleteEmailFromDatabase(email: String): DatabaseOperation {
         return executeDatabaseOperation {
             emailDao.deleteEmail(email)
+        }
+    }
+
+    override fun getArchivedWifiItems(): Flow<Result<List<Wifi>, DataError.Local>> {
+        return flow {
+            wifiDao.getAllWifi()
+                .onEmpty {
+                    emit(Result.Success(emptyList()))
+                }.catch {
+                    emit(Result.Error(DataError.Local.INCOMPLETE))
+                }.collect { wifiEntities ->
+                    emit(Result.Success(wifiEntities.map { it.toWifi() }))
+                }
         }
     }
 

@@ -38,11 +38,20 @@ dependencies {
 
     //Modules
     implementation(projects.core.designSystem)
-    
+    implementation(projects.core.data)
+    implementation(projects.core.domain)
+    implementation(projects.core.model)
+
     //Hilt
     implementation(libs.bundles.hilt)
     ksp(libs.hilt.compiler)
 
+    //Immutable collections
+    implementation(libs.kotlinx.immutable.collections)
+
     //serialization
     implementation(libs.serilization)
+
+    //lifecycle
+    implementation(libs.bundles.lifecycle)
 }

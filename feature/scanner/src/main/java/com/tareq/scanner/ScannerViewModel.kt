@@ -197,14 +197,16 @@ class ScannerViewModel @Inject constructor(
     private fun insertEmailIntoDatabase(email: EmailFields, scanDate: String) {
         performDatabaseOperation(
             databaseOperation = { insertEmailIntoDatabaseUseCase(email.toEmail(), scanDate) },
-            updateUiState = { updateEmailFields(!email.isArchived) }
+            updateUiState = { updateEmailFields(!email.isArchived) },
+            isArchived = !email.isArchived
         )
     }
 
     private fun deleteEmailFromDatabase(email: String) {
         performDatabaseOperation(
             databaseOperation = { deleteEmailFromDatabaseUseCase(email) },
-            updateUiState = { updateEmailFields(false) }
+            updateUiState = { updateEmailFields(false) },
+            isArchived = false
         )
     }
 
@@ -248,14 +250,16 @@ class ScannerViewModel @Inject constructor(
                     scanDate
                 )
             },
-            updateUiState = { updateContactFields(!contactFields.isArchived) }
+            updateUiState = { updateContactFields(!contactFields.isArchived) },
+            isArchived = !contactFields.isArchived
         )
     }
 
     private fun deleteContactFromDatabase(contactName: String) {
         performDatabaseOperation(
             databaseOperation = { deleteContactFromDatabaseUseCase(contactName) },
-            updateUiState = { updateContactFields(false) }
+            updateUiState = { updateContactFields(false) },
+            isArchived = false
         )
     }
 
@@ -270,14 +274,16 @@ class ScannerViewModel @Inject constructor(
     private fun deleteWifiFromDatabase(ssid: String) {
         performDatabaseOperation(
             databaseOperation = { deleteWifiFromDatabaseUseCase(ssid) },
-            updateUiState = { updateWifiFields(false) }
+            updateUiState = { updateWifiFields(false) },
+            isArchived = false
         )
     }
 
     private fun insertWifiIntoDatabase(wifiFields: WifiFields, scanDate: String) {
         performDatabaseOperation(
-            databaseOperation = { insertWifiIntoDatabaseUseCase(wifiFields.toWifi(), scanDate) },
-            updateUiState = { updateWifiFields(!wifiFields.isArchived) }
+            databaseOperation = { insertWifiIntoDatabaseUseCase(wifiFields.toWifi(scanDate)) },
+            updateUiState = { updateWifiFields(!wifiFields.isArchived) },
+            isArchived = !wifiFields.isArchived
         )
     }
 
@@ -325,7 +331,8 @@ class ScannerViewModel @Inject constructor(
     private fun deleteProductFromDatabase(productBarcode: String) {
         performDatabaseOperation(
             databaseOperation = { deleteProductFromDatabaseUseCase(productBarcode) },
-            updateUiState = { updateProductArchiveState(false) }
+            updateUiState = { updateProductArchiveState(false) },
+            isArchived = false
         )
     }
 
@@ -337,7 +344,8 @@ class ScannerViewModel @Inject constructor(
                     scanDate
                 )
             },
-            updateUiState = { updateProductArchiveState(!productFields.isArchived) }
+            updateUiState = { updateProductArchiveState(!productFields.isArchived) },
+            isArchived = productFields.isArchived
         )
     }
 
@@ -384,14 +392,23 @@ class ScannerViewModel @Inject constructor(
 
     private fun performDatabaseOperation(
         databaseOperation: suspend () -> DatabaseOperation,
-        updateUiState: () -> Unit
+        updateUiState: () -> Unit,
+        isArchived: Boolean,
     ) {
         viewModelScope.launch {
             when (databaseOperation()) {
-                is DatabaseOperation.InComplete -> showToastMessage(R.string.item_archive_failed)
+                is DatabaseOperation.InComplete -> {
+                    if(isArchived)
+                        showToastMessage(R.string.item_archive_failed)
+                    else
+                        showToastMessage(R.string.item_unarchive_failed)
+                }
                 DatabaseOperation.Complete -> {
                     updateUiState()
-                    showToastMessage(R.string.item_archive_success)
+                    if(isArchived)
+                        showToastMessage(R.string.item_archive_success)
+                    else
+                        showToastMessage(R.string.item_unarchive_success)
                 }
             }
         }

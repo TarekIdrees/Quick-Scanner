@@ -7,6 +7,6 @@ import javax.inject.Inject
 class InsertWifiIntoDatabaseUseCase @Inject constructor(
     private val scannerRepository: ScannerRepository
 ) {
-    suspend operator fun invoke(wifi: Wifi, scanDate: String) =
-        scannerRepository.insertWifiIntoDatabase(wifi, scanDate)
+    suspend operator fun invoke(wifi: Wifi) =
+        scannerRepository.insertWifiIntoDatabase(wifi)
 }

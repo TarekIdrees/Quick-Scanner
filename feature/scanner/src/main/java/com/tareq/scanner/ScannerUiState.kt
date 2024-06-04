@@ -53,14 +53,15 @@ data class ContactFields(
     val isArchived: Boolean = false
 )
 
-fun ContactFields.toContact() = Contact(
+fun ContactFields.toContact(scanDate: String) = Contact(
     name = name,
     title = title,
     phoneNumbers = phoneNumbers,
     emails = emails,
     addresses = addresses,
     urls = urls,
-    organization = organization
+    organization = organization,
+    scanDate = scanDate
 )
 
 @Immutable

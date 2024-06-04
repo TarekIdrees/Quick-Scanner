@@ -246,7 +246,7 @@ class ScannerViewModel @Inject constructor(
         performDatabaseOperation(
             databaseOperation = {
                 insertContactIntoDatabaseUseCase(
-                    contactFields.toContact(),
+                    contactFields.toContact(scanDate),
                     scanDate
                 )
             },

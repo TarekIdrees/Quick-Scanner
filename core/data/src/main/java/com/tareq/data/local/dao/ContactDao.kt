@@ -5,6 +5,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.tareq.data.local.entity.ContactEntity
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface ContactDao {
@@ -13,4 +14,7 @@ interface ContactDao {
 
     @Query("DELETE FROM contact_table WHERE name = :name")
     suspend fun deleteContact(name: String)
+
+    @Query("SELECT * FROM contact_table")
+    fun getAllContacts(): Flow<List<ContactEntity>>
 }

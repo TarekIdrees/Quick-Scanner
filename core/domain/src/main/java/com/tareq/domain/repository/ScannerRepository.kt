@@ -23,4 +23,5 @@ interface ScannerRepository {
     suspend fun deleteEmailFromDatabase(email: String): DatabaseOperation
 
     fun getArchivedWifiItems(): Flow<Result<List<Wifi>, DataError.Local>>
+    fun getArchivedContacts(): Flow<Result<List<Contact>, DataError.Local>>
 }

@@ -8,4 +8,5 @@ data class Contact(
     val addresses: List<String>,
     val urls: List<String>,
     val organization: String,
+    val scanDate: String,
 )

@@ -5,6 +5,7 @@ import com.tareq.data.local.dao.ContactDao
 import com.tareq.data.local.dao.EmailDao
 import com.tareq.data.local.dao.ProductDao
 import com.tareq.data.local.dao.WifiDao
+import com.tareq.data.local.mapper.toContact
 import com.tareq.data.local.mapper.toContactEntity
 import com.tareq.data.local.mapper.toEmailEntity
 import com.tareq.data.local.mapper.toProductEntity
@@ -107,16 +108,17 @@ class ScannerRepositoryImpl @Inject constructor(
     }
 
     override fun getArchivedWifiItems(): Flow<Result<List<Wifi>, DataError.Local>> {
-        return flow {
-            wifiDao.getAllWifi()
-                .onEmpty {
-                    emit(Result.Success(emptyList()))
-                }.catch {
-                    emit(Result.Error(DataError.Local.INCOMPLETE))
-                }.collect { wifiEntities ->
-                    emit(Result.Success(wifiEntities.map { it.toWifi() }))
-                }
-        }
+        return getArchivedItems(
+            daoFlow = wifiDao.getAllWifi(),
+            entityToDomainModel = { it.toWifi() }
+        )
+    }
+
+    override fun getArchivedContacts(): Flow<Result<List<Contact>, DataError.Local>> {
+        return getArchivedItems(
+            daoFlow = contactDao.getAllContacts(),
+            entityToDomainModel = { it.toContact() }
+        )
     }
 
     private suspend fun executeDatabaseOperation(operation: suspend () -> Unit): DatabaseOperation {
@@ -127,6 +129,22 @@ class ScannerRepositoryImpl @Inject constructor(
             } catch (e: Exception) {
                 DatabaseOperation.InComplete(DataError.Local.INCOMPLETE)
             }
+        }
+    }
+
+    private fun <Entity, DomainModel> getArchivedItems(
+        daoFlow: Flow<List<Entity>>,
+        entityToDomainModel: (Entity) -> DomainModel
+    ): Flow<Result<List<DomainModel>, DataError.Local>> {
+        return flow {
+            daoFlow
+                .onEmpty {
+                    emit(Result.Success(emptyList()))
+                }.catch {
+                    emit(Result.Error(DataError.Local.INCOMPLETE))
+                }.collect { entities ->
+                    emit(Result.Success(entities.map { entityToDomainModel(it) }))
+                }
         }
     }
 }

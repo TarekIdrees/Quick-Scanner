@@ -93,7 +93,7 @@ data class ProductFields(
     val isArchived: Boolean = false,
 )
 
-fun ProductFields.toProduct() = Product(
+fun ProductFields.toProduct(scanDate: String) = Product(
     barcode = barcode,
     title = title,
     description = description,
@@ -102,7 +102,8 @@ fun ProductFields.toProduct() = Product(
     category = category,
     images = images,
     ingredients = ingredients,
-    size = size
+    size = size,
+    scanDate = scanDate
 )
 
 @Immutable

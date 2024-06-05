@@ -345,7 +345,7 @@ class ScannerViewModel @Inject constructor(
         performDatabaseOperation(
             databaseOperation = {
                 insertProductIntoDatabaseUseCase(
-                    productFields.toProduct(),
+                    productFields.toProduct(scanDate),
                     scanDate
                 )
             },

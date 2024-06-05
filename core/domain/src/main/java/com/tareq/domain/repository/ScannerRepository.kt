@@ -24,4 +24,6 @@ interface ScannerRepository {
 
     fun getArchivedWifiItems(): Flow<Result<List<Wifi>, DataError.Local>>
     fun getArchivedContacts(): Flow<Result<List<Contact>, DataError.Local>>
+    fun getArchivedEmails(): Flow<Result<List<Email>, DataError.Local>>
+
 }

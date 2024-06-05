@@ -9,3 +9,10 @@ internal fun Email.toEmailEntity(scanDate: String) = EmailEntity(
     body = body,
     scanDate = scanDate
 )
+
+internal fun EmailEntity.toEmail() = Email(
+    email = email,
+    subject = subject,
+    body = body,
+    scanDate = scanDate
+)

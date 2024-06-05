@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.tareq.domain.DataError
 import com.tareq.domain.Result
 import com.tareq.domain.usecase.GetArchivedContactsUseCase
+import com.tareq.domain.usecase.GetArchivedEmailsUseCase
 import com.tareq.domain.usecase.GetArchivedWifiUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -20,7 +21,8 @@ import javax.inject.Inject
 @HiltViewModel
 class ArchiveViewModel @Inject constructor(
     private val getArchivedWifiUseCase: GetArchivedWifiUseCase,
-    private val getArchivedContactsUseCase: GetArchivedContactsUseCase
+    private val getArchivedContactsUseCase: GetArchivedContactsUseCase,
+    private val getArchivedEmailsUseCase: GetArchivedEmailsUseCase
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(ArchiveUiState())
@@ -29,6 +31,7 @@ class ArchiveViewModel @Inject constructor(
     init {
         loadArchivedWifi()
         loadArchivedContacts()
+        loadArchivedEmails()
     }
 
     private fun loadArchivedWifi() {
@@ -36,9 +39,7 @@ class ArchiveViewModel @Inject constructor(
             flow = getArchivedWifiUseCase(),
             transform = { it.toWifiArchiveItem() },
             updateState = { items ->
-                _uiState.update {
-                    it.copy(wifiArchiveItems = items, isLoading = false)
-                }
+                _uiState.update { it.copy(wifiArchiveItems = items) }
             }
         )
     }
@@ -48,9 +49,17 @@ class ArchiveViewModel @Inject constructor(
             flow = getArchivedContactsUseCase(),
             transform = { it.toContactArchiveItem() },
             updateState = { items ->
-                _uiState.update {
-                    it.copy(contactArchiveItems = items, isLoading = false)
-                }
+                _uiState.update { it.copy(contactArchiveItems = items) }
+            }
+        )
+    }
+
+    private fun loadArchivedEmails() {
+        loadArchivedItems(
+            flow = getArchivedEmailsUseCase(),
+            transform = { it.toEmailArchiveItem() },
+            updateState = { items ->
+                _uiState.update { it.copy(emailArchiveItems = items) }
             }
         )
     }

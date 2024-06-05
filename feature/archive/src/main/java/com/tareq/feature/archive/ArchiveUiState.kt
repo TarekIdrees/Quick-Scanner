@@ -5,6 +5,7 @@ import com.tareq.core.design.system.R
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
 import com.tareq.model.Contact
+import com.tareq.model.Email
 import com.tareq.model.Wifi
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
@@ -16,6 +17,7 @@ data class ArchiveUiState(
     val isError: Boolean = false,
     val wifiArchiveItems: List<WifiArchiveItem> = persistentListOf(),
     val contactArchiveItems: List<ContactArchiveItem> = persistentListOf(),
+    val emailArchiveItems: List<EmailArchiveItem> = persistentListOf(),
 )
 
 @Immutable
@@ -27,6 +29,14 @@ data class WifiArchiveItem(
     val scanDate: String = "",
 )
 
+fun Wifi.toWifiArchiveItem() = WifiArchiveItem(
+    ssid = ssid,
+    password = password,
+    encryptionType = encryptionType,
+    scanDate = scanDate
+)
+
+@Immutable
 data class ContactArchiveItem(
     @DrawableRes val iconFile: Int = R.drawable.ic_contact,
     val name: String = "",
@@ -50,12 +60,20 @@ fun Contact.toContactArchiveItem() = ContactArchiveItem(
     scanDate = scanDate
 )
 
-fun Wifi.toWifiArchiveItem() = WifiArchiveItem(
-    ssid = ssid,
-    password = password,
-    encryptionType = encryptionType,
+@Immutable
+data class EmailArchiveItem(
+    val email: String = "",
+    val subject: String = "",
+    val body: String = "",
+    val scanDate: String = "",
+)
+
+fun Email.toEmailArchiveItem() = EmailArchiveItem(
+    email = email,
+    subject = subject,
+    body = body,
     scanDate = scanDate
 )
 
 fun ArchiveUiState.isArchivedItemsEmpty() =
-    wifiArchiveItems.isEmpty() && contactArchiveItems.isEmpty()
+    wifiArchiveItems.isEmpty() && contactArchiveItems.isEmpty() && emailArchiveItems.isEmpty()

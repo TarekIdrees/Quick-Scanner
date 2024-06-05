@@ -15,3 +15,16 @@ internal fun Product.toProductEntity(scanDate: String) = ProductEntity(
     size = size,
     scanDate = scanDate
 )
+
+internal fun ProductEntity.toProduct() = Product(
+    barcode = barcode,
+    title = title,
+    description = description,
+    brand = brand,
+    manufacturer = manufacturer,
+    category = category,
+    images = images,
+    ingredients = ingredients,
+    size = size,
+    scanDate = scanDate
+)

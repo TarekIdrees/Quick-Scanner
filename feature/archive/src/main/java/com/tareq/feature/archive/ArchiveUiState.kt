@@ -6,6 +6,7 @@ import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
 import com.tareq.model.Contact
 import com.tareq.model.Email
+import com.tareq.model.Product
 import com.tareq.model.Wifi
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
@@ -15,9 +16,10 @@ import kotlinx.collections.immutable.toImmutableList
 data class ArchiveUiState(
     val isLoading: Boolean = false,
     val isError: Boolean = false,
-    val wifiArchiveItems: List<WifiArchiveItem> = persistentListOf(),
-    val contactArchiveItems: List<ContactArchiveItem> = persistentListOf(),
-    val emailArchiveItems: List<EmailArchiveItem> = persistentListOf(),
+    val wifiArchiveItems: ImmutableList<WifiArchiveItem> = persistentListOf(),
+    val contactArchiveItems: ImmutableList<ContactArchiveItem> = persistentListOf(),
+    val emailArchiveItems: ImmutableList<EmailArchiveItem> = persistentListOf(),
+    val productArchiveItems: ImmutableList<ProductArchiveItem> = persistentListOf(),
 )
 
 @Immutable
@@ -72,6 +74,33 @@ fun Email.toEmailArchiveItem() = EmailArchiveItem(
     email = email,
     subject = subject,
     body = body,
+    scanDate = scanDate
+)
+
+@Immutable
+data class ProductArchiveItem(
+    val barcode: String = "",
+    val title: String = "",
+    val description: String = "",
+    val brand: String = "",
+    val manufacturer: String = "",
+    val category: String = "",
+    val images: ImmutableList<String> = persistentListOf(),
+    val ingredients: String = "",
+    val size: String = "",
+    val scanDate: String = "",
+)
+
+fun Product.toProductArchiveItem() = ProductArchiveItem(
+    barcode = barcode,
+    title = title,
+    description = description,
+    brand = brand,
+    manufacturer = manufacturer,
+    category = category,
+    images = images.toImmutableList(),
+    ingredients = ingredients,
+    size = size,
     scanDate = scanDate
 )
 

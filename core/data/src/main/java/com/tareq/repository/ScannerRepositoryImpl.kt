@@ -9,6 +9,7 @@ import com.tareq.data.local.mapper.toContact
 import com.tareq.data.local.mapper.toContactEntity
 import com.tareq.data.local.mapper.toEmail
 import com.tareq.data.local.mapper.toEmailEntity
+import com.tareq.data.local.mapper.toProduct
 import com.tareq.data.local.mapper.toProductEntity
 import com.tareq.data.local.mapper.toWifi
 import com.tareq.data.local.mapper.toWifiEntity
@@ -126,6 +127,13 @@ class ScannerRepositoryImpl @Inject constructor(
         return getArchivedItems(
             daoFlow = emailDao.getAllEmails(),
             entityToDomainModel = { it.toEmail() }
+        )
+    }
+
+    override fun getArchivedProducts(): Flow<Result<List<Product>, DataError.Local>> {
+        return getArchivedItems(
+            daoFlow = productDao.getAllProducts(),
+            entityToDomainModel = { it.toProduct() }
         )
     }
 

@@ -13,4 +13,5 @@ internal fun ProductDto.toProduct() = Product(
     images = images?.filterNotNull() ?: emptyList(),
     ingredients = ingredients ?: "",
     size = size ?: "",
+    scanDate = ""
 )

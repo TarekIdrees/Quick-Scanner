@@ -7,8 +7,10 @@ import com.tareq.domain.DataError
 import com.tareq.domain.Result
 import com.tareq.domain.usecase.GetArchivedContactsUseCase
 import com.tareq.domain.usecase.GetArchivedEmailsUseCase
+import com.tareq.domain.usecase.GetArchivedProductsUseCase
 import com.tareq.domain.usecase.GetArchivedWifiUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -22,7 +24,8 @@ import javax.inject.Inject
 class ArchiveViewModel @Inject constructor(
     private val getArchivedWifiUseCase: GetArchivedWifiUseCase,
     private val getArchivedContactsUseCase: GetArchivedContactsUseCase,
-    private val getArchivedEmailsUseCase: GetArchivedEmailsUseCase
+    private val getArchivedEmailsUseCase: GetArchivedEmailsUseCase,
+    private val getArchivedProductsUseCase: GetArchivedProductsUseCase
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(ArchiveUiState())
@@ -32,6 +35,7 @@ class ArchiveViewModel @Inject constructor(
         loadArchivedWifi()
         loadArchivedContacts()
         loadArchivedEmails()
+        loadArchivedProducts()
     }
 
     private fun loadArchivedWifi() {
@@ -39,7 +43,7 @@ class ArchiveViewModel @Inject constructor(
             flow = getArchivedWifiUseCase(),
             transform = { it.toWifiArchiveItem() },
             updateState = { items ->
-                _uiState.update { it.copy(wifiArchiveItems = items) }
+                _uiState.update { it.copy(wifiArchiveItems = items.toImmutableList()) }
             }
         )
     }
@@ -49,7 +53,7 @@ class ArchiveViewModel @Inject constructor(
             flow = getArchivedContactsUseCase(),
             transform = { it.toContactArchiveItem() },
             updateState = { items ->
-                _uiState.update { it.copy(contactArchiveItems = items) }
+                _uiState.update { it.copy(contactArchiveItems = items.toImmutableList()) }
             }
         )
     }
@@ -59,7 +63,17 @@ class ArchiveViewModel @Inject constructor(
             flow = getArchivedEmailsUseCase(),
             transform = { it.toEmailArchiveItem() },
             updateState = { items ->
-                _uiState.update { it.copy(emailArchiveItems = items) }
+                _uiState.update { it.copy(emailArchiveItems = items.toImmutableList()) }
+            }
+        )
+    }
+
+    private fun loadArchivedProducts() {
+        loadArchivedItems(
+            flow = getArchivedProductsUseCase(),
+            transform = { it.toProductArchiveItem() },
+            updateState = { items ->
+                _uiState.update { it.copy(productArchiveItems = items.toImmutableList()) }
             }
         )
     }

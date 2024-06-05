@@ -72,10 +72,11 @@ data class EmailFields(
     val isArchived: Boolean = false
 )
 
-fun EmailFields.toEmail() = Email(
+fun EmailFields.toEmail(scanDate: String) = Email(
     email = email,
     subject = subject,
-    body = body
+    body = body,
+    scanDate = scanDate
 )
 
 @Immutable

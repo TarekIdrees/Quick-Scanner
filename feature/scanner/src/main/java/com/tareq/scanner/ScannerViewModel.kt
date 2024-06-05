@@ -196,7 +196,12 @@ class ScannerViewModel @Inject constructor(
 
     private fun insertEmailIntoDatabase(email: EmailFields, scanDate: String) {
         performDatabaseOperation(
-            databaseOperation = { insertEmailIntoDatabaseUseCase(email.toEmail(), scanDate) },
+            databaseOperation = {
+                insertEmailIntoDatabaseUseCase(
+                    email.toEmail(scanDate),
+                    scanDate
+                )
+            },
             updateUiState = { updateEmailFields(!email.isArchived) },
             isArchived = !email.isArchived
         )
@@ -398,14 +403,15 @@ class ScannerViewModel @Inject constructor(
         viewModelScope.launch {
             when (databaseOperation()) {
                 is DatabaseOperation.InComplete -> {
-                    if(isArchived)
+                    if (isArchived)
                         showToastMessage(R.string.item_archive_failed)
                     else
                         showToastMessage(R.string.item_unarchive_failed)
                 }
+
                 DatabaseOperation.Complete -> {
                     updateUiState()
-                    if(isArchived)
+                    if (isArchived)
                         showToastMessage(R.string.item_archive_success)
                     else
                         showToastMessage(R.string.item_unarchive_success)

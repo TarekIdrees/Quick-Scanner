@@ -1,7 +1,7 @@
-package com.tareq.barcodescanner
+package com.tareq.quickscanner
 
 import android.app.Application
 import dagger.hilt.android.HiltAndroidApp
 
 @HiltAndroidApp
-class BarcodeScannerApplication: Application() {}
+class QuickScannerApplication: Application() {}

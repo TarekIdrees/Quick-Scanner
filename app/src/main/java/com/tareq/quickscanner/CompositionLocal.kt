@@ -1,4 +1,4 @@
-package com.tareq.barcodescanner
+package com.tareq.quickscanner
 
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.navigation.NavHostController

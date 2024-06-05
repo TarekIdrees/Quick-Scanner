@@ -1,4 +1,4 @@
-package com.tareq.barcodescanner.naviagtion
+package com.tareq.quickscanner.naviagtion
 
 import androidx.annotation.DrawableRes
 import com.tareq.core.design.system.R

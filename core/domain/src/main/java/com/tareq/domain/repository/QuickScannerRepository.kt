@@ -10,7 +10,7 @@ import com.tareq.model.Wifi
 import com.tareq.model.local.ScanItem
 import kotlinx.coroutines.flow.Flow
 
-interface ScannerRepository {
+interface QuickScannerRepository {
     suspend fun getScanItems(): List<ScanItem>
     suspend fun getProductByBarcode(barcode: String): Result<Product, DataError.Network>
     suspend fun insertProductIntoDatabase(product: Product, scanDate: String): DatabaseOperation

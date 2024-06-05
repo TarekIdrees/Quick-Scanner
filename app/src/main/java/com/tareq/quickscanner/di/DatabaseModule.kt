@@ -1,4 +1,4 @@
-package com.tareq.barcodescanner.di
+package com.tareq.quickscanner.di
 
 import android.content.Context
 import androidx.room.Room

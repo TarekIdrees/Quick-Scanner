@@ -7,25 +7,6 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:418622277126:android:36f3241b19759b41b0e587",
-        "android_client_info": {
-          "package_name": "com.tareq.barcodescanner"
-        }
-      },
-      "oauth_client": [],
-      "api_key": [
-        {
-          "current_key": "AIzaSyCCRW4I78m9nh2xoCC4_mpFdH3xhwCN3HU"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": []
-        }
-      }
-    },
-    {
-      "client_info": {
         "mobilesdk_app_id": "1:418622277126:android:61573434fed7c802b0e587",
         "android_client_info": {
           "package_name": "com.tareq.chessclockpro"
@@ -49,6 +30,25 @@
         "mobilesdk_app_id": "1:418622277126:android:8c4b1c9b2ed95895b0e587",
         "android_client_info": {
           "package_name": "com.tareq.gittrack"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCCRW4I78m9nh2xoCC4_mpFdH3xhwCN3HU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:418622277126:android:f23c4ffa77ebd774b0e587",
+        "android_client_info": {
+          "package_name": "com.tareq.quickscanner"
         }
       },
       "oauth_client": [],

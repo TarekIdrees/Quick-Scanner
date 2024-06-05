@@ -1,7 +1,7 @@
-package com.tareq.barcodescanner.di
+package com.tareq.quickscanner.di
 
-import com.tareq.domain.repository.ScannerRepository
-import com.tareq.repository.ScannerRepositoryImpl
+import com.tareq.domain.repository.QuickScannerRepository
+import com.tareq.repository.QuickScannerRepositoryImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -13,5 +13,5 @@ import javax.inject.Singleton
 abstract class RepositoryModule {
     @Singleton
     @Binds
-    abstract fun bindScannerRepository(repository: ScannerRepositoryImpl): ScannerRepository
+    abstract fun bindScannerRepository(repository: QuickScannerRepositoryImpl): QuickScannerRepository
 }

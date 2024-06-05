@@ -19,7 +19,7 @@ import com.tareq.data.remote.mapper.toProduct
 import com.tareq.domain.DataError
 import com.tareq.domain.DatabaseOperation
 import com.tareq.domain.Result
-import com.tareq.domain.repository.ScannerRepository
+import com.tareq.domain.repository.QuickScannerRepository
 import com.tareq.model.Contact
 import com.tareq.model.Email
 import com.tareq.model.Product
@@ -33,14 +33,14 @@ import kotlinx.coroutines.flow.onEmpty
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
-class ScannerRepositoryImpl @Inject constructor(
+class QuickScannerRepositoryImpl @Inject constructor(
     private val scanItemsSource: ScanItemsSource,
     private val productApi: ProductApi,
     private val productDao: ProductDao,
     private val wifiDao: WifiDao,
     private val contactDao: ContactDao,
     private val emailDao: EmailDao
-) : ScannerRepository {
+) : QuickScannerRepository {
     override suspend fun getScanItems(): List<ScanItem> {
         return scanItemsSource.scanItems
     }

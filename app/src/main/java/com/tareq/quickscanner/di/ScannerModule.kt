@@ -1,4 +1,4 @@
-package com.tareq.barcodescanner.di
+package com.tareq.quickscanner.di
 
 import android.app.Application
 import android.content.Context

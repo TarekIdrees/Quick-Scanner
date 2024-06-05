@@ -1,4 +1,4 @@
-package com.tareq.barcodescanner.di
+package com.tareq.quickscanner.di
 
 import com.tareq.data.remote.ProductApi
 import com.tareq.data.remote.ProductApiImpl

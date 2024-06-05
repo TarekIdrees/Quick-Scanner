@@ -1,11 +1,11 @@
 package com.tareq.domain.usecase
 
-import com.tareq.domain.repository.ScannerRepository
+import com.tareq.domain.repository.QuickScannerRepository
 import javax.inject.Inject
 
 class DeleteWifiFromDatabaseUseCase @Inject constructor(
-    private val scannerRepository: ScannerRepository
+    private val quickScannerRepository: QuickScannerRepository
 ) {
-    suspend operator fun invoke(ssid: String) = scannerRepository.deleteWifiFromDatabase(ssid)
+    suspend operator fun invoke(ssid: String) = quickScannerRepository.deleteWifiFromDatabase(ssid)
 
 }

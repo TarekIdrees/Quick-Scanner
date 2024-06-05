@@ -10,10 +10,10 @@ plugins {
 }
 
 android {
-    namespace = "com.tareq.barcodescanner"
+    namespace = "com.tareq.quickscanner"
 
     defaultConfig {
-        applicationId = "com.tareq.barcodescanner"
+        applicationId = "com.tareq.quickscanner"
         versionCode = 1
         versionName = "1.0"
     }

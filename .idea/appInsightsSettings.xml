@@ -27,10 +27,10 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="com.tareq.barcodescanner" />
-                  <option name="mobileSdkAppId" value="1:418622277126:android:36f3241b19759b41b0e587" />
-                  <option name="projectId" value="apps-property-97220" />
-                  <option name="projectNumber" value="418622277126" />
+                  <option name="appId" value="PLACEHOLDER" />
+                  <option name="mobileSdkAppId" value="" />
+                  <option name="projectId" value="" />
+                  <option name="projectNumber" value="" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />

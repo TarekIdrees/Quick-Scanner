@@ -1,4 +1,4 @@
-package com.tareq.barcodescanner.di
+package com.tareq.quickscanner.di
 
 import com.tareq.data.local.ScanItemsSource
 import dagger.Module

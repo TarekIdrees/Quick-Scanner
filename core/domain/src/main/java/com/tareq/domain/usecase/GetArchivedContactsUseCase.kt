@@ -1,10 +1,10 @@
 package com.tareq.domain.usecase
 
-import com.tareq.domain.repository.ScannerRepository
+import com.tareq.domain.repository.QuickScannerRepository
 import javax.inject.Inject
 
 class GetArchivedContactsUseCase @Inject constructor(
-    private val scannerRepository: ScannerRepository
+    private val quickScannerRepository: QuickScannerRepository
 ) {
-    operator fun invoke() = scannerRepository.getArchivedContacts()
+    operator fun invoke() = quickScannerRepository.getArchivedContacts()
 }

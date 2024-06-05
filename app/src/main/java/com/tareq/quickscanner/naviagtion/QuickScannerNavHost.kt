@@ -1,4 +1,4 @@
-package com.tareq.barcodescanner.naviagtion
+package com.tareq.quickscanner.naviagtion
 
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
@@ -7,7 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.tareq.barcodescanner.LocalNavigationProvider
+import com.tareq.quickscanner.LocalNavigationProvider
 import com.tareq.feature.archive.ArchiveScreen
 import com.tareq.scanner.ScannerScreen
 
@@ -18,12 +18,8 @@ fun QuickScanNavHost(modifier: Modifier = Modifier) {
         modifier = modifier,
         navController = navController,
         startDestination = BottomBarScreen.Scanner.route,
-        enterTransition = {
-            fadeIn(animationSpec = tween(300))
-        },
-        exitTransition = {
-            fadeOut(animationSpec = tween(300))
-        }
+        enterTransition = { fadeIn(animationSpec = tween(300)) },
+        exitTransition = { fadeOut(animationSpec = tween(300)) }
     ) {
         composable(route = BottomBarScreen.Scanner.route) {
             ScannerScreen()

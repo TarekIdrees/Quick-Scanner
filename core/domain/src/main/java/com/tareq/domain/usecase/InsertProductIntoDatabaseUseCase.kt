@@ -1,12 +1,12 @@
 package com.tareq.domain.usecase
 
-import com.tareq.domain.repository.ScannerRepository
+import com.tareq.domain.repository.QuickScannerRepository
 import com.tareq.model.Product
 import javax.inject.Inject
 
 class InsertProductIntoDatabaseUseCase @Inject constructor(
-    private val scannerRepository: ScannerRepository
+    private val quickScannerRepository: QuickScannerRepository
 ) {
     suspend operator fun invoke(product: Product, scanDate: String) =
-        scannerRepository.insertProductIntoDatabase(product, scanDate)
+        quickScannerRepository.insertProductIntoDatabase(product, scanDate)
 }

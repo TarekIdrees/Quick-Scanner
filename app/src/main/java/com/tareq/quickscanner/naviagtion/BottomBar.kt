@@ -1,4 +1,4 @@
-package com.tareq.barcodescanner.naviagtion
+package com.tareq.quickscanner.naviagtion
 
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
@@ -13,7 +13,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.tareq.barcodescanner.LocalNavigationProvider
+import com.tareq.quickscanner.LocalNavigationProvider
 import com.tareq.design_system.ui.Brand
 import com.tareq.design_system.ui.white30
 import com.tareq.design_system.ui.white87

@@ -1,11 +1,11 @@
 package com.tareq.domain.usecase
 
-import com.tareq.domain.repository.ScannerRepository
+import com.tareq.domain.repository.QuickScannerRepository
 import javax.inject.Inject
 
 class DeleteProductFromDatabaseUseCase @Inject constructor(
-    private val scannerRepository: ScannerRepository
+    private val quickScannerRepository: QuickScannerRepository
 ) {
     suspend operator fun invoke(productId: String) =
-        scannerRepository.deleteProductFromDatabase(productId)
+        quickScannerRepository.deleteProductFromDatabase(productId)
 }
